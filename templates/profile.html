@@ -1,0 +1,56 @@
+    <div style="padding:0 15px;width:85%;">
+        <div style="border-bottom:1px solid #c3c3c3;overflow:auto;">
+            <h2 style="margin:12px 0">Profile</h2>
+        </div>
+        <div style="margin:20px 0;">
+            <div>
+                <form action="/updatepublic" method="post">
+                    {% csrf_token %}
+                    <div class="element">
+                        <p>Username</p>
+                        <input name="username" type="text" value="{{user.username}}">
+                        {% if invaliduname %}
+                            <small style="color:red;display:block">Username already exists</small>
+                        {% endif %}
+                    </div>
+                    <div class="element">
+                        <p>State</p>
+                        <select name="state">
+                            {% for i in state %}
+                            {% ifequal i udetails.state %}
+                                <option value="{{i.id}}" selected>{{i.state}}</option>
+                                {% else %}
+                                <option value="{{i.id}}">{{i.state}}</option>
+                            {% endifequal %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="element">
+                        <p>Address</p>
+                        <input name="address" type="text" value="{{udetails.address}}">
+                    </div>
+                    <div class="element">
+                        <p>Gender</p>
+                        <select name="gender">
+                            {% ifequal udetails.gender 0 %}
+                                <option value="0" selected>Male</option>
+                                {% else %}
+                                <option value="0">Male</option>
+                            {% endifequal %}
+                            {% ifequal udetails.gender 1 %}
+                                <option value="1" selected>Female</option>
+                                {% else %}
+                                <option value="1">Female</option>
+                            {% endifequal %}
+                            {% ifequal udetails.gender 2 %}
+                                <option value="2" selected>Other</option>
+                                {% else %}
+                                <option value="2">Other</option>
+                            {% endifequal %}
+                        </select>
+                    </div>
+                    <button type="submit">Update profile</button>
+                </form>
+            </div>
+        </div>
+    </div>

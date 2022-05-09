@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dcs</title>
+    <link rel="stylesheet" href="/static/navbar-mobile.css">
+    <link rel="stylesheet" href="/static/style-mobile.css">
+    <style>
+        .frame{
+            height:100%;
+            width:100%;
+            position:relative;
+            margin:auto;
+        }
+        .frame .inner{
+            width: 95%;
+            height: 95%;
+            margin: auto;
+            background-color: white;
+            position: absolute;
+            left: 2.5%;
+            right: 2.5%;
+            top: 2.5%;
+            bottom: 2.5%;
+            padding:10px;
+            box-sizing:border-box;
+         }
+         button{
+            border: 0;
+            cursor: pointer;
+            color: white;
+            background-color: blue;
+            padding: 10px 25px;
+            background-color: blue;
+            border-radius: 0.5em;
+            font-size: 18px;
+         }
+        body{
+            background-color:#eee;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <nav>
+        <div>
+            <div class="navigation">
+                <div class="brand">
+                    <h1>Dark cyber securities</h1>
+                </div>
+                <div onclick="navcontroller(event)" class="navbutton">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div onclick="navcontroller(event)" style="width: 0%" class="sidenavouter">
+        <div style="width: 0%" class="sidenav">
+            <div class="sidenavheader">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 172 172" style=" fill:#4a90e2;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M86,6.90688c-43.65602,0 -79.12,35.46398 -79.12,79.12c0,41.63931 32.27171,75.80172 73.1336,78.87141c0.08056,0.00655 0.16115,0.01386 0.24187,0.02015c1.9,0.13691 3.80998,0.22844 5.74453,0.22844c1.93455,0 3.84453,-0.09153 5.74453,-0.22844c0.08072,-0.0063 0.16131,-0.01361 0.24187,-0.02015c40.86189,-3.06969 73.1336,-37.2321 73.1336,-78.87141c0,-43.65602 -35.46398,-79.12 -79.12,-79.12zM86,13.78688c39.93779,0 72.24,32.3022 72.24,72.24c0,19.71706 -7.89544,37.55193 -20.6736,50.57875c-5.46671,-3.98083 -12.22246,-6.35558 -18.275,-8.47906c-7.16896,-2.5112 -13.95113,-4.89168 -15.82937,-9.03c-0.29584,-3.53288 -0.2694,-6.29176 -0.24188,-9.46l0.00672,-1.34375c3.05472,-2.9068 6.89623,-9.04167 8.21031,-14.70735c2.2704,-1.21088 5.04643,-4.11354 5.87891,-11.06578c0.41624,-3.45032 -0.56572,-6.12245 -1.94172,-7.91469c1.8576,-6.3812 5.55361,-22.53555 -0.92047,-32.96219c-2.73824,-4.40664 -6.87027,-7.18686 -12.30203,-8.28422c-3.05128,-3.77712 -8.80925,-5.83859 -16.50797,-5.83859c-11.69944,0.21672 -20.27622,3.80018 -25.4775,10.64922c-6.13352,8.084 -7.29248,20.29804 -3.45344,36.32156c-1.42072,1.79224 -2.44546,4.50307 -2.02234,8.02219c0.83592,6.95224 3.60179,9.8549 5.87219,11.06578c1.31408,5.67256 5.15215,11.80726 8.21031,14.71406l0.00672,1.31015c0.02752,3.182 0.05396,5.94696 -0.24188,9.4936c-1.88512,4.14864 -8.69992,6.55503 -15.90328,9.09719c-6.0162,2.12442 -12.73196,4.50283 -18.18765,8.43203c-12.78804,-13.02829 -20.68703,-30.87322 -20.68703,-50.59891c0,-39.93779 32.30221,-72.24 72.24,-72.24z"></path></g></g></svg>
+                <p>Login or register</p>
+            </div>
+            <div class="sidenavbody">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/category">Start learning</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    {% if request.user.is_anonymous %}
+                        <li><a href="/login">Login</a></li>
+                        {% else %}
+                        <li><a href="/account">Account</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="frame">
+        <div class="inner">
+            <div class="segment right">
+                <div style="font-size:20px;overflow:auto;border-bottom:1px solid #d2d2d2">
+                    <p style="margin:15px 0">Price details</p>
+                </div>
+                <div>
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>{{product.name|title}}</p>
+                        <p>{{subamount}} ₹</p>
+                    </div>
+                    {% if fromsame %}
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>LGST</p>
+                        <p>9%</p>
+                    </div>
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>CGST</p>
+                        <p>9%</p>
+                    </div>
+                    {% else %}
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>IGST</p>
+                        <p>18%</p>
+                    </div>
+                    {% endif %}
+<!--                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">-->
+<!--                        <p>Discount</p>-->
+<!--                        <p>{{discount}} ₹</p>-->
+<!--                    </div>-->
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>Total</p>
+                        <p>{{price}} ₹</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="segment left">
+                <div style="overflow:auto;width:90%">
+                    <form action="/enroll" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="eid" value="{{request.GET.eid}}">
+                        <p>Select your subscription duration</p>
+                        <div style="overflow:auto">
+                            {% for i in subs %}
+                            <div style="display:flex;align-items:center;border: 1px solid #c3c3c3;border-radius: 0.4em;margin:10px 0">
+                                <div style="padding:0 10px">
+                                    {% ifequal i.default True %}
+                                        <input type="radio" name="opt" value="{{i.id}}" checked>
+                                    {% else %}
+                                        <input onchange="location.href='/enroll?eid={{request.GET.eid}}&sub={{i.id}}'" type="radio" name="opt" value="{{i.id}}">
+                                    {% endifequal %}
+                                </div>
+                                <div style="padding:10px;border-left: 1px solid #c3c3c3;">
+                                    <p style="font-size:17px" >{{i.duration}} month</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                        <div style="margin:15px 0;">
+                            <button>Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="/static/javascript/navbar.js"></script>
+</body>
+</html>

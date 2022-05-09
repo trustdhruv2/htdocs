@@ -1,0 +1,21 @@
+    <div style="padding:0 15px;width:85%;">
+        <div style="border-bottom:1px solid #c3c3c3;overflow:auto;">
+            <h2 style="margin:12px 0">Enrollments</h2>
+        </div>
+        <div style="margin:40px 0;border:1px solid #c3c3c3;border-radius:0.2em;">
+            <div style="overflow:auto;padding:0 10px;border-bottom:1px solid #c3c3c3;">
+                <p style="font-size:15px;">Enrollment events</p>
+            </div>
+            {% for i in enrollments %}
+                <div style="border-bottom:1px solid #c3c3c3;padding:8px 10px">
+                    <p style="font-size:16px;margin:10px 0">{{i.domain|title}}</p>
+                    <span style="font-size:14px;margin:10px 0">{{i.enrolledon|date}} - {{i.expiry|date}}</span>
+                    <span style="font-size:14px;margin:10px 0">| <a style="text-decoration:none" href="/enroll?eid={{i.domain.id}}">Renew</a></span>
+                </div>
+                {% empty %}
+                <div style="border-bottom:1px solid #c3c3c3;padding:8px 10px">
+                    <p style="font-size:16px;margin:10px 0">No events are available</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>

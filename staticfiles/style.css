@@ -1,0 +1,13 @@
+*{
+    font-family: sans-serif;
+}
+body{
+    overflow: auto;
+    padding-top: 70px;
+    box-sizing: border-box;
+}
+html,body{
+    margin: 0;
+    height: 100%;
+}
+

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{block.super}}
+<style>
+    html,body{
+        height: 100%;
+        box-sizing: border-box;
+    }
+    .filterbox{
+        background-color: white;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        overflow-y: hidden;
+        transition: 0.7s ease-in-out;
+    }
+    select{
+        width: 100%;
+        box-sizing: border-box;
+        border: 0;
+        border-bottom: 1px solid;
+        outline: none;
+        font-size: 14px;
+    }
+    form div{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        overflow: auto;
+        font-size: 15px;
+    }
+    form button{
+        border: 0;
+        cursor: pointer;
+        color: white;
+        background-color: blue;
+        padding: 10px;
+        background-color: blue;
+        border-radius: 0.5em;
+        width: 100%;
+        font-size: 15px;
+    }
+</style>
+{% endblock styles %}
+{% block content %}
+        <div style="padding-left: 5px;padding-right: 5px;">
+            <div style="display: flex;justify-content: space-between;align-items: center">
+                <h1 style="font-size: 23px">{{ clist.0.course.name|title }}</h1>
+                <a onclick="openfilter()" style="margin:0;font-size: 15px;text-decoration: none;color: blue">Filter</a>
+            </div>
+            {% for i in clist %}
+            <div style="padding-top: 15px;padding-bottom: 15px;margin-top: 15px;margin-bottom: 15px;border-bottom: 1px solid #cacaca;display: flex">
+                <div style="width: 50%">
+                    <img style="width: 100%;height: 100%;object-fit: cover;object-position: center" src="{{i.thumbnail}}" />
+                </div>
+                <div style="width: 50%;padding-left: 5px;padding-right: 5px;display: flex;justify-content: space-between">
+                    <div>
+                        <p style="margin: 0;font-size: 18px">{{ i.name | title }}</p>
+                        <p style="margin-top: 5px;margin-bottom: 5px;font-size: 13px;line-height: 23px">{{ i.description }}</p>
+                        <div style="border-radius: 0.2em;width: 35px;text-align: center;background-color: green;color: white;margin-top: 7px;margin-bottom: 7px;padding: 3px">
+                            <p style="margin: 0;font-size: 15px;">&#9956;{{ i.rating }}</p>
+                        </div>
+                        <div style="margin-bottom: 7px;margin-top: 7px">
+                        {% for j,k in choose.items %}
+                            {% ifequal j i.level %}
+                                <small style="color: crimson">{{ k|title }}</small>
+                            {% endifequal %}
+                        {% endfor %}
+                        </div>
+                        <div>
+                            <button style="outline: none;color: white;border: 0;background-color: blue;padding: 5px;padding-left: 15px;padding-right: 15px;border-radius: 0.2em;"><a style="color: white;text-decoration: none" href="/description?pid={{ i.id }}">Join us</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="height: 0" class="filterbox">
+    <section style="background-color: white;margin-left: 0.5%;margin-right: 0.5%;padding:15px;padding-top: 30px;padding-bottom: 30px">
+        <div style="display: flex;justify-content: space-between;align-items: center;margin-top: 10px;margin-bottom: 10px">
+            <p style="margin:0;font-size: 20px;font-weight: 600;">Filter By</p>
+            <a href="/courses?cid={{ request.GET.cid }}" style="margin:0;font-size: 15px;text-decoration: none;color: blue">Clear All</a>
+        </div>
+        <form method="GET" action="/courses">
+            <div>
+                <input type="hidden" name="cid" value="{{ request.GET.cid }}">
+            </div>
+            <div>
+                <p>Name</p>
+                <select name="name" >
+                    {% for i in name %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <p>Difficulty level</p>
+                <select name="level" >
+                    {% for i in levels %}
+                        {% for j,k in choose.items %}
+                            {% ifequal j i %}
+                                <option value="{{ j }}">{{ k|title }}</option>
+                            {% endifequal %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <p>Rating</p>
+                {% for i in rating %}
+                    <div style="margin-top: 5px;margin-bottom: 7px;">
+                        <input type="radio" name="rating" value="{{ i }}" checked >
+                        <small style="font-size: 18px">{{ i }}</small>
+                        <small style="font-size: 20px"> &#9956;</small>
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                <button type="submit">Filter</button>
+            </div>
+        </form>
+    </section>
+        <p style="font-size: 20px;position: absolute;top: 10px;right: 10px;margin: 0" onclick="closefilter()">X</p>
+        </div>
+    <script src="/static/javascript/navbar.js"></script>
+    <script>
+        function openfilter(){
+            document.getElementsByClassName("filterbox")[0].style.height="100%"
+        }
+        function closefilter(){
+            document.getElementsByClassName("filterbox")[0].style.height="0%"
+        }
+    </script>
+{% endblock content %}

@@ -1,0 +1,33 @@
+nav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    z-index:777;
+}
+.navigation{
+    display: flex;justify-content: space-between;align-items: center;padding: 10px;padding-left: 20px;padding-right: 20px;
+}
+.navigation .menuitems{
+    display: flex;justify-content: space-between;
+}
+.navigation .menuitems p{
+    padding-left: 10px;
+    padding-right: 10px;
+    outline: none;
+    color: white;
+}
+.navigation .menuitems p a{
+    color: white;
+    text-decoration: none;
+}
+.navigation .menuitems p a:hover{
+    color: #ee2d86;    
+}
+.brand{
+    color: white;
+}
+.brand h1{
+    margin:0
+}

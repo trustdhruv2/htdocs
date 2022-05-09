@@ -1,0 +1,165 @@
+    <div style="padding:0 15px;width:85%;">
+        <div style="margin:0px 0px 30px 0px">
+            <div style="border-bottom:1px solid #c3c3c3;overflow:auto;">
+                <h2 style="margin:12px 0">Change Email</h2>
+            </div>
+            <div style="margin:10px 0;">
+                <p>New Email</p>
+                <input id="emailinput" oninput="enableemailinput()" type="email" placeholder="Enter your email">
+                <div style="margin:10px 0">
+                    <div id="recaptcha-container1"></div>
+                </div>
+                <button id="emailgenerator" disabled onclick="generateemail()">Update Email</button>
+            </div>
+        </div>
+        <div style="margin:0px 0px 30px 0px">
+            <div style="border-bottom:1px solid #c3c3c3;overflow:auto;">
+                <h2 style="margin:12px 0">Change Contact</h2>
+            </div>
+            <div style="margin:10px 0;">
+                <p>New Contact</p>
+                <div style="width:100%;position:relative;top:0;">
+                    <small style="position:absolute;left:5px;top:7px;">+91</small>
+                    <input oninput="enablephoneinput()" id="phoneinput" maxlength="10" style="padding:5px 35px" type="tel" placeholder="Contact">
+                </div>
+                <div style="margin:10px 0">
+                    <div id="recaptcha-container2"></div>
+                </div>
+                <button id="phonegenerator" disabled onclick="generateotp()">Update Contact</button>
+            </div>
+        </div>
+    </div>
+    <div id="toaster">
+        <p></p>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+    <script src="/static/javascript/firebaseinitializer.js" ></script>
+    <script src="/static/javascript/popuphandler.js" ></script>
+    <script>
+        var r1=false
+        var r2=false
+        let rcontainer = new firebase.auth.RecaptchaVerifier('recaptcha-container1', {
+          'size': 'normal',
+          'callback': (response) => {
+            r1=true
+          }
+        });
+        let rcontainer2 = new firebase.auth.RecaptchaVerifier('recaptcha-container2', {
+          'size': 'normal',
+          'callback': (response) => {
+            r2=true
+          }
+        });
+        rcontainer.render().then(() => {
+          rcontainer2.render()
+        });
+        var actionCodeSettings = {
+          url: location.protocol+"//localhost:8000/changeemail",
+          handleCodeInApp: true,
+        };
+        function checkotp(ele){
+            ele.parentElement.children[3].innerText="Please wait..."
+            confirmationResult.confirm(ele.value).then((result) => {
+                var xhttp = new XMLHttpRequest();
+                let formdata=new FormData();
+                formdata.append("csrfmiddlewaretoken","{{csrf_token}}");
+                formdata.append("phone",result.user.phoneNumber);
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        location.href="/login"
+                    }
+                };
+                xhttp.open("POST", "/changephone", true);
+                xhttp.send(formdata);
+            }).catch((error)=>{
+                alert(error.message);
+            })
+        }
+        function phonevalidation(inputtxt) {
+              let phoneno = /^\d{10}$/;
+              if(inputtxt.match(phoneno)){
+                  return true;
+              }else {
+                  return false;
+              }
+        }
+        function ValidateEmail(mail){
+             if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail)){
+                return true
+             }
+             return false
+        }
+        function enableemailinput(){
+            let email=document.querySelector("#emailinput").value.trim()
+            if(ValidateEmail(email)){
+                document.querySelector("#emailgenerator").disabled=false
+            }else{
+                document.querySelector("#emailgenerator").disabled=true
+            }
+        }
+        function enablephoneinput(){
+            let phone=document.querySelector("#phoneinput").value.trim()
+            if(phonevalidation(phone)){
+                document.querySelector("#phonegenerator").disabled=false
+            }else{
+                document.querySelector("#phonegenerator").disabled=true
+            }
+        }
+        function presenttoast(message){
+            let pop=document.querySelector("#toaster")
+            pop.children[0].innerText=message
+            pop.style.bottom="50px"
+            setTimeout(()=>{pop.style.bottom="-50px"},3000)
+        }
+        function generateemail(){
+            if(!r1){
+                presenttoast("You need to solve recaptcha first");
+                return false;
+            }
+            let email=document.querySelector("#emailinput").value
+            firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+              .then(() => {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        presenttoast("A verification mail is sent to "+email)
+                    }
+                };
+                xhttp.open("GET", "/storenewmail?nemail="+email, true);
+                xhttp.send();
+              })
+              .catch((error) => {
+                alert(error.message);
+              });
+        }
+        function generateotp(){
+            if(!r2){
+                presenttoast("You need to solve recaptcha first");
+                return false;
+            }
+            let phone="+91"+document.querySelector("#phoneinput").value.trim()
+            firebase.auth().signInWithPhoneNumber(phone, rcontainer2)
+                .then((confirmationResult) => {
+                  document.querySelector("body").innerHTML+=`<div class="otppopup" style="position:fixed;top:0;left:0;height:100%;width:100%;background-color:#0000008f;display:flex;justify-content:center;align-items:center">
+                <div style="padding:15px;background-color:white;border-radius:0.3em;position:relative">
+                    <img onclick="document.querySelector('.otppopup').remove()" style="cursor:pointer;position:absolute;top:-20px;right:-30px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAABzUlEQVRYhe3Wy27TYBAF4A+2ZAkRECpuFeVdemFL6RMAZYHaF2FHEQ9QhRYJBDwILCo2sKDsoV2FEMzin8iRaxzbKeqiPZKl5J8zM8dje2Y4w2nHuYb8OdzDIm7Ef/iGr3iPN9g/LoFj9LCFIbIp1wh9XD+u5Cs4iOADbOM+FnAhrgWshm0Q3AMsz5r8iXRHmXRXN2v43MKOvBrrbZOvRIDfeNrCfyN8R1pUoicve5vkkyIy/MSVJo4v5WWfFbsRa6uuw5xUuoHyZ/4Q3ZLzbtiKuB2xhlJlp2JdUrxdYnsUtk8FEd04y4JTRL/CdgQfgrxaYptMNBZRdlbEWtjf1RHwOch3/mEvJpyWnNQnMuzVEXAY5E4F5xI+yrvfHi5X8DvBOywazpeQszoqS1A1V8Z5/tQJdOKP4MRfwsf+32dY1ieO4JrUNAbSYCmiaSOa17ARwQtJ8U5dhwq8jljPmzhdlQ+jjRmSb0aMH6o/01Isy8dxGxGb8nG82MIfaS6MF5JdabBMw7y87CPppZ4JS9I8H69kfTzAXanDdeL3Gl7hl7zsre+8iIt4pt5SOpRmf60FpOla3pNWtSVpV5hcy79Ia/lbfG8Y9wynGH8BHnKpr/YwVJ8AAAAASUVORK5CYII="/>
+                    <div style="text-align:center">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAACL0lEQVRoge3ZzWrUUBjG8V/9KIhFdGEV9AZ05060G9Hu1U3BGxDxA6+ie10JgogLFyJ1IUoFV4Jb8QJURHSwLYg4IqK1cZEzOGWazJyZJBPb/OElQ86b5HlyPnLOGRo2N5O4iS/4gLmusvN4g6+4h32Vq4vgLpKuWJMauxF+d5e9xI7xyMznuPVCB4lrY1HahwfijbzFtnGIzWIav8UbSTBbhICi3sZZw7f3uf4p1fHUcLWR4CMmqpe8np04hZ+GN5LgAnZVrB0cw218ixDbL37gPmaqMDCFW3q/CUXHAg6WaeROyQa641WMsNhR61dk/iisxiRvj7z5E7zGd+lbm8Buo486CZbxDs+lU5rr+DPifaOYt75tv0BbdpNph5yFrnPzVQrO4qh/nf9iODeJq3pNXAllcCmcW8ORCvXm8lgq6j3O4DSe6TWyGMpmpdP8JFzbsKU4h5bqvhv9oiWdnEZTJxOd+JQlNm/8T+J8V8aGmmu1OhuFxkjdaIzUjcZI3WiM1I0yjJyQTuWzmMHJEp6byTBzoXa4dionZyrk5K0i82JDiq6RpXA8kJMzHY7LRT64aCMdcdM5Of+FkU6NDGJkKScnmnHUSKfZ1bpGNk3TWgnH/Tk5nbKVnJxotkQfaQ1xv85bLquPZK7Z84xcFm+mzD7SCpoq5bPsL3OhTapM9kr/Esgysoo9Y1M3IIfxSP/50kMcGpPGXDbasB40FosQUNTwO8pmXl03AhtG4i/1boL+GLKbiQAAAABJRU5ErkJggg==" alt="">
+                        <p id="heading">A verification code is sent to `+phone+`</p>
+                    </div>
+                    <div style="margin-top:20px">
+                        {% csrf_token %}
+                        <p>Verification code</p>
+                        <input style="width:100%" type="tel" placeholder="Ex. 123456">
+                        <button onclick="checkotp(event.target.parentElement.children[2])">Verify</button>
+                    </div>
+                </div>
+            </div>`
+                  window.confirmationResult = confirmationResult;
+                }).catch((error) => {
+                    console.log(error)
+
+                });
+        }
+    </script>

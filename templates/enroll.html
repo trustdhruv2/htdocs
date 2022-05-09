@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dcs</title>
+    <link rel="stylesheet" href="/static/navbar.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .frame{
+            height:100%;
+            width:100%;
+            position:relative;
+            margin:auto;
+        }
+        .frame .inner{
+            width: 95%;
+            height: 95%;
+            margin: auto;
+            background-color: white;
+            position: absolute;
+            left: 2.5%;
+            right: 2.5%;
+            top: 2.5%;
+            bottom: 2.5%;
+         }
+         button{
+            border: 0;
+            cursor: pointer;
+            color: white;
+            background-color: blue;
+            padding: 10px 25px;
+            background-color: blue;
+            border-radius: 0.5em;
+            font-size: 18px;
+         }
+        .frame .segment{
+            position:absolute;
+            top:0;
+            bottom:0;
+        }
+        .frame .left{
+            left:0;
+            width:66%;
+            padding:0 1%;
+        }
+        .frame .right{
+            right:0;
+            width:30%;
+            border-left:1px solid #d2d2d2;
+            padding:0 1%;
+            overflow:auto;
+        }
+        body{
+            background-color:#eee;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <nav>
+        <div>
+            <div class="navigation">
+                <div class="brand">
+                    <h1>Dark cyber securities</h1>
+                </div>
+                <div class="menuitems">
+                    <p><a href="/">Home</a></p>
+                    <p><a href="/services">Services</a></p>
+                    <p><a href="/category">Start learning</a></p>
+                    <p><a href="#">Resources</a></p>
+                    <p><a href="#">Contact us</a></p>
+                    {% if request.user.is_anonymous %}
+                        <p><a href="/login">Log In</a></p>
+                        {% else %}
+                        <p><a href="/account">Account</a></p>
+                        <p><a href="/logout">Logout</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="frame">
+        <div class="inner">
+            <div class="segment left">
+                <div style="overflow:auto;font-size:20px">
+                    <p>Fill in the details in order to continue</p>
+                </div>
+                <div style="overflow:auto;width:90%">
+                    <form action="/enroll" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="eid" value="{{request.GET.eid}}">
+                        <p>Select your subscription duration</p>
+                        <div style="overflow:auto">
+                            {% for i in subs %}
+                            <div style="display:flex;align-items:center;border: 1px solid #c3c3c3;border-radius: 0.4em;margin:10px 0">
+                                <div style="padding:0 10px">
+                                    {% ifequal i.default True %}
+                                        <input type="radio" name="opt" value="{{i.id}}" checked>
+                                    {% else %}
+                                        <input onchange="location.href='/enroll?eid={{request.GET.eid}}&sub={{i.id}}'" type="radio" name="opt" value="{{i.id}}">
+                                    {% endifequal %}
+                                </div>
+                                <div style="padding:10px;border-left: 1px solid #c3c3c3;">
+                                    <p style="font-size:17px" >{{i.duration}} month</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                        <div style="margin:15px 0;">
+                            <button>Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="segment right">
+                <div style="font-size:20px;overflow:auto;border-bottom:1px solid #d2d2d2">
+                    <p style="margin:15px 0">Price details</p>
+                </div>
+                <div>
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>{{product.name|title}}</p>
+                        <p>{{subamount}} ₹</p>
+                    </div>
+                    {% if fromsame %}
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>LGST</p>
+                        <p>9%</p>
+                    </div>
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>CGST</p>
+                        <p>9%</p>
+                    </div>
+                    {% else %}
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>IGST</p>
+                        <p>18%</p>
+                    </div>
+                    {% endif %}
+<!--                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">-->
+<!--                        <p>Discount</p>-->
+<!--                        <p>{{discount}} ₹</p>-->
+<!--                    </div>-->
+                    <div style="overflow:auto;border-bottom:1px solid #d2d2d2;display:flex;justify-content:space-between">
+                        <p>Total</p>
+                        <p>{{price}} ₹</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

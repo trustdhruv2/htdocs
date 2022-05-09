@@ -1,0 +1,9 @@
+channels
+Django==2.2.6
+django-cors-headers
+djangorestframework
+gunicorn
+whitenoise
+pyrebase4
+django-jazzmin
+psycopg2-binary

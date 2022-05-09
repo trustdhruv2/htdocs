@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dcs</title>
+    <link rel="stylesheet" href="/static/navbar.css">
+    <link rel="stylesheet" href="/static/spinner.css">
+    <style>
+        *{
+            font-family: sans-serif;
+        }
+        .msgbox{
+            min-width: 150px;
+            background-color: green;
+            border-radius: 0.5em;
+            margin: 10px;
+            position: relative;
+            max-width: 200px;
+            color: white;
+            text-align: center;
+            padding: 0px 15px;
+            box-sizing: border-box;
+            line-height: 25px;
+        }
+        .receiver{
+            height: 20px;
+            position: absolute;
+            bottom: 0;
+            left: -19px;
+            border-bottom: 14px solid green;
+            border-left: 21px solid transparent;
+            border-right: 20px solid transparent;
+            width: 0;
+            transform: rotate(328deg);
+        }
+        .sender{
+            height: 20px;
+            position: absolute;
+            bottom: 0;
+            right: -19px;
+            border-bottom: 14px solid green;
+            border-left: 21px solid transparent;
+            border-right: 20px solid transparent;
+            width: 0;
+            transform: rotate(34deg);
+        }
+        .sender-outer{
+            display: flex;
+            justify-content: flex-end;
+        }
+        .receiver-outer{
+            display: flex;
+            justify-content: flex-start;
+        }
+
+         body{
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        html,body{
+            margin: 0;
+            height: 100%;
+        }
+        .popup{
+            background-color: white;text-align: center;padding: 10px;max-width: 400px;font-size: 24px;border-radius: 0.2em;margin: 15px;
+        }
+        .pending{
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .popup button{
+            border: 0;
+            cursor: pointer;
+            color: white;
+            background-color: blue;
+            padding: 10px;
+            background-color: blue;
+            border-radius: 0.5em;
+            width: 100%;
+            font-size: 15px;
+        }
+        .page1{
+            position: fixed;top: 0;width: 100%;height: 100%;z-index: 3;overflow: hidden;transition: 0.5s ease-in-out
+        }
+        .page2{
+            position: fixed;top:0;width: 100%;height: 100%;z-index: 2;padding: 80px 0px;box-sizing: border-box;overflow-y: auto;
+        }
+        .popup img{
+            width: 60px;
+        }
+        .member{
+            padding: 5px;display: flex;align-items: center;border:0;width:100%;background-color: transparent;border-bottom: 1px solid #d4d4d4;outline: none;
+        }
+        .member img{
+            margin: 12px 0px
+        }
+        .member div{
+            text-align:left;padding: 0px 10px;line-height: 25px;
+        }
+        .member div p{
+            margin: 0;font-size: 20px
+        }
+        .member div small{
+            font-size:14px;
+        }
+        .popup h1{
+            font-size: 23px;
+        }
+        .popup p{
+            font-size: 17px;
+            line-height: 30px;
+        }
+        .popupback{
+            background-color: #000000b8;
+            position: fixed;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body onload="initconnection()">
+
+    <div class="popupback">
+        <div class="lds-hourglass"></div>
+    </div>
+        <div class="page1" >
+            <section style="width: 100%;overflow: hidden;position: relative;padding-top: 117px;border-right: 1px solid #d4d4d4;height: 100%">
+                <div style="position: absolute;top: 0;width: 100%;overflow: auto;padding: 10px;box-sizing: border-box;background-color: #cccccc">
+                    <h1>Chat</h1>
+                    <div style="width: 100%;position:relative">
+                        <input oninput="searchvalue(event.target.value)" type="text" style="padding: 5px;outline:none;border-color:transparent;border-radius:0.5em;padding-left: 30px;box-sizing: border-box;width: 100%" placeholder="Search ">
+                        <img style="position: absolute;top: 7px;left:8px;width: 15px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABaElEQVRIia2Uv07DMBCHPzKUgXSDJenAwN434DFaYIMBEKSdWGDjtagiBC0rTLB0gYEWVHWnICUdfFaDGvyH5iTLlvO7+3yx72DZ6kAXSIER8C1zCnSAsMTH2faATyA3jA+g9Z/gV0AmQe6BNhABNSAWeF++Z8Cl78kz4Ac4tWjPRJfhmEmdxW+xBS9CcmCMw510RXznGFzbQPwSmzAVYdsTsC9+PZtwJMLIExCL37tNOBNhzROwLn5fJlEATGW96QnYknlqEgXAi6x3PQFa/2wTdlCp9j2CrwEP4nduE4eo8s9R79vFEjzqAFRF6kq2QRLR5cCF44EA1Vt0Lxqg3nkD9boawAGL36LHBGj6QFqotE3ddCwnnxQgR8A1jrUUoi6uhyqimcw3sr8humYBosdQsq3MDlnO8BckWBGwXbK3A9xSUSYR6sRldzVE9auVLTZAHqsAmCBvVQH+ghxXCdCQJ+AVOAGYA9xJhKAfeGcBAAAAAElFTkSuQmCC"/>
+                    </div>
+                </div>
+                <div id="mlist" style="height: 100%;overflow: auto;background-color: white">
+                </div>
+            </section>
+        </div>
+        <div class="page2">
+            <header style="position: fixed;left: 0;right: 0;padding: 0px 45px;box-sizing: border-box;top: 0;border-bottom: 1px solid #d4d4d4;background-color: #d4d4d4;z-index: 1">
+                <img onclick='document.getElementsByClassName("page1")[0].style.width="100%";' style="width: 30px;top: 20px;left: 10px;position: absolute" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAB30lEQVRoge2ZPW8UMRCGn0F0XNrU663zr5CIyHFQEsKHkpDkUgJhvU3yq+hz/bVeWoZiiZAuLnJrjzeR9m1Hsp7X44/xGCZNmjRpa6mKa8KV82GeOpTk4NlKquLa7gqYAwosVgc7zdDhnmUDe4hUxfnuBz089BOYlInnWcAeoruZFzZhRWBv6LBlMtDDf4d78ADXt+vZ4AzYG+iXzTdgEYler9azfY7lz9DhzQ3U7e8lwttIKBkejE+h2neXir6PhLLAg2EGqqZbWsOD0SlU+e5C0MNIKCs8GCyhf/AfIqHs8JDZgPPhHDiKhEzgIeMecG04ozA8ZMqAa8MZysdIyBQeMhhwPnwFPkVC5vCQuIRcE04ZER4SMuCacIrwORIqBg8DM1D7cPIY4GGAgboJxwpfIqHi8JC1lJDyrzsG7oHah5N4FuRmtX7xqmQWDDZxWRNJaX8MJgwvsjImjEsJexPZTo6xTBQqp+1MFHzQ2JgwuXxKmjC7PaumW4rE3sV5TYzUVslnwrx+sTZhX4DdtRaj3bl0E2UqyP/N3Uh/NM1Eme60iK5ez94BkY8MfVnvdk/gg6M3sUD5uRFRlF+Dh03E2l4bX0yivLmd7/jiHElSlcoHX7Vhf2yUSZMmjay/AkobJMlU9UcAAAAASUVORK5CYII="/>
+                <div style="display: flex;align-items: center">
+                    <img style="margin: 10px 0px;width: 50px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAFdUlEQVRoge2af2hWVRjHP+82cCvmMmjWNLLoB5WwUMjSlm0jdeV/gWskUVlRWRKxgoiQJHMVllKprd9hKP2iiCCzleUiY26amTlqVhqEU5ubK7dle/vjeU73dN977+69770zoi8c3t1znud7nnPPj+d5zh38R5BJkOts4DKgUstEoExLFugF+oB9wA5gO9AKdCVoQ2ycCSwBvkaMjVN2AA8BZ+RjSNwZmQzcD8wDirTuV2AjsA34CvgeZxZAZmYsMnOVwBTgSmCcth8D1gNNwDcx7QqNE4DHgT+QtzkIvARU4wwoCoqAGuBl5coq96NASQL2emIy8pZNZyuAigT5JwArcV7Sd8AFCfIDMAs4rB20ARcl3YGFKUC79tUD1CZFXAUMKPF6UpxyC2OAV7XPIWTp5oVzgUNK+CTJHtcjIYMstSxwEDkkYhN9oURvAAVJWBcRBcCbasPnxHyRNyrBz0Cpq60YuBvYCvyOHLGbVacwBHchcBPiEPuUo005i12ypWpDFrghrPEnAs3IJhtS5fkumfGIn/BzcC2Iv/BDGfBJgP527cPGfJz90gM8q7b6YpUH8T6gwZK5FngemAmcrGUBso6Nzqfkvlm07jNL7gAyM4bnCuAFoN7SqVcb3HY9HTSQbhW6FJgDdFiKC4MUkYPhgCW/2kNmtdXeDZwzAudCS74dmA1M1+f9QYp7VGiGPhcAi7TuhxE6BZgLDKt8n0d7v7YNA1eF4PtR5e/COWxmaN2eIMUtKrTYqqvAOQLD4BE1+GGPtqXatjQkl1mudgSxWOu2BCn2qpC9WVdoXWvIzpNEK44PMxiLkxb4IsqMFACNwG5kGbUAUyMYOVV1+pSjkVxfFXtGgvaIe00+Qe5JMogkVyOhCifatctyl5zZI4uIuEdMODIdqENyC9PJbS7ZIx6GZIFdIQay20fXfUDcabV1ICepObUC9+waD/KfkATKjXbgF2AD8AqyTPaHHMi3KtuiuhuUq81DtkFtcNu1KqiDEsRrmpzgMbwd22ijGLHF5EJrCGmXWTZJJk754jTEpiNejX4R7bD+9qdhUUwc1d8/vRr9BrJTf+sSNyc+jC07A6VcuBlno0/QukpgLZL2po1q4EXgQn2eCOxVmxZEISrEiVK3Atcj5/51SVkaAtcgy6lebTBRdeQE7ySgk38eeUF5RgXwturMxPt6qAgJ1TuBtwg+TEpdfXciuUws1LrIpvnIVZKbM/QgPqBcS4PW2TJ7VdcLl7hka+IOwsAEklngA3Lz5jmIRzZT3+QxKHei1qSyxpu7910G+NDSCQwQw8L4FOMkNyKx0qnAfVb9a8g1Dsg6vgOJXru1bAZux1njY1THpLD3KuflwEdWvV9uExlm0z+H3O+63/Aw8CDxbjgyqmuSMbsc0j6zwKa8RqCYp2RdwHlI1LsLCdo2IRfR+WIWstQOKvdyJHXu0r69Yr3IyODk7h8jp1naGIdz09JBiNkOcwcFsp7rkO8htyKnUBnyKWAYCTbNXomCQuTFlCD7YxpwCxIRn68yy4AvI/L64nQkxvE7idIqx3Aii0CEnZE+4GJk3b4PvIPMQCEyIwP6d1g+gyHlHkD2xzbgdeTm3/TVHJFzRBjn2AuckjS5hXIcv1SVVifGSb1LOjfzGeA97WNdCvx/4ywcT7+SZAdTADyl3IeRiDdVVCNRaRaZoUkJcE7Cme2jSNA5KqhBLg+ywG/APcT37I3KkVXOvL9ORUU5TqyURS4EoqLZ0l+rnMcNc3Eup2dH0KtTnX7g6hTsioUHEKMCv1m48IzqLEnFopioQowaRP4jImiJjFcZc2Ua5op1VNFE9BBk2XGxNARqEWdpvnx5lW6VyTt1/R//ZvwFxioUTHmNNqQAAAAASUVORK5CYII="/>
+                    <div style="margin:0px 10px">
+                        <p class="freind" style="margin: 0;font-size: 20px"></p>
+                        <small class="active" style="font-size:14px;color: indianred"></small>
+                    </div>
+                </div>
+            </header>
+            <div class="msgbody">
+            </div>
+            <footer style="position:fixed;bottom: 0;left: 0;right: 0;padding: 17px;box-sizing: border-box;border-top: 1px solid #d4d4d4;background-color: #d4d4d4">
+                <form onsubmit="return false">
+                    <input id="msgarea" type="text" style="width: 85%;box-sizing: border-box;border: 0;border-radius: 1em;height: 100%;padding: 10px;font-size:15px;outline:none;" placeholder="Type in something...." />
+                    <button onclick="if(document.getElementById('msgarea').value.length>0){sendmsg(document.getElementById('msgarea').value)}" style="width:45px;outline:none;position: absolute;right: 12px;transform: rotate(90deg);bottom: 18px;background: transparent;border: 0">
+                        <img style="width:100%;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAD5ElEQVRoge2Z3WscVRiHn3c2290SP0iRtBW/iMFsTL2x+wdIlF4KqdYLqUUMFo1FL0qw9cYBwQQr0hY1qKQUFsRSTcRLwdwX0yJo2KyYYosfWRAiMSEbtzuvF7ury87szpyZyVponsv3nPOe32/PYeec98A229zaSCxZbLWGymQrDsOWkFXlIeAeoLvWYx34RaEAXE5YzC0kmccWJ+rUkQwMvqF7gVdQjgD3Gg6/jpADPsi/Lb+H1RDKwCMntKcs2AJHgXTYyWuUFD5Op3jzO1v+NB1sbCBzUg8CUwK9pmN9KCqMLU7IjMmg4AYOaSLTz3sCrxpLM0E5k1/iOBelEqR7IAMP2Jre+TefooxEUxcQYXZjB8/+bEvJr6vlm+yQJtKb5DomHkAZSW9y4TFbu/y6+hqobZun41EWHIEni5ucCtCvNZmTelDgi7AiempfgZX1sBlQlKfykzLbqkNLA32v650pizywN8zMu7phehSSFjw/DX/8FSYLAMUuZfD7SVnxamy5hXZYvEVE8QN7oK8Xzo/CXbeHyQTA7rJgt2r0XIGhcd3jdHEV2Gk6W083nKuJb6SwDC9Mh95OJafCg4V35LfmBs8VcJIcI4T4XQ3iC8v/xRd+rcZyL4ZeibTVxZhXg9uArRbKc6YzNG6b+q9dZ/Rc1USk7aQcxlaXXldgqEwWuC+q+MatsroRi4n7B8o86mugUuHxOMXXicOE5TDsirkCFvvjFl8nsgkh69LbHFBlYCvE14lkQsk0h7z+he4OkuvAPnPxdVY34Oj56ti+Xnji4YADxf1d8jos3RYk12eXQIGvfwj3376yXjV+YB9cuBRwkOJaK9/TXjsCT9yClfXoOby20Fq0lFuI4DpReRlwfa5vGhTX5d9lQIRCZ9SEQFhsDrkMOA6XO6MmBMp8c8hlIJHgm86oMcexmGuOuQwsJJkHrndEkRnXCkmuNAc9TqPi1CpmNxs5r1Kk533AKvM+sLHlkoJTcipMeTV4Glg4JcsKn2ytJgOUj7xuY9DmUt9v6x3JTRYJeS+OkWIqRaZV3bTlpf4nW1YVjlE98vxfKPBSu6Jv28LW4oTMoJyNXVZQlNP5CfmyXRffylx+ieMKn8enKhgKX+WXGPfr518bvSiVG2scRmhZHdsCZm6s8UyQCrVReX2wn3eB14zGmaEop/NLjMdaXm9k8ISOIEwBu43ltaeI8nK7OqgX/luoifykzKZSZBTOAr71+wCUUM6kUmRMxUMcj3zKGHAEw1oScA3IIXzY8Uc+F7ZaQyX2OzCsQlb495m1fr9eo/rM+qPAt47FXCHJlTieWbfZ5lbnHyrXVrNuHcxaAAAAAElFTkSuQmCC"/>
+                    </button>
+                </form>
+            </footer>
+        </div>
+   <script >
+        let channel=null;
+        let currentuser=null
+        function appearreceivemsg(msg){
+            let receiveouter=document.createElement("div")
+            let msgbody=document.createElement("p")
+            msgbody.innerText=msg
+            receiveouter.className="receiver-outer"
+            let msgbox=document.createElement("div")
+            msgbox.className="msgbox"
+            msgbox.appendChild(msgbody)
+            let tail=document.createElement("div")
+            tail.className="receiver"
+            receiveouter.appendChild(msgbox)
+            msgbox.appendChild(tail)
+            document.getElementsByClassName("msgbody")[0].appendChild(receiveouter)
+            msgbody.scrollIntoView()
+        }
+        function appearsendermsg(msg){
+            let senderouter=document.createElement("div")
+            let msgbody=document.createElement("p")
+            msgbody.innerText=msg
+            senderouter.className="sender-outer"
+            let msgbox=document.createElement("div")
+            msgbox.className="msgbox"
+            msgbox.appendChild(msgbody)
+            let tail=document.createElement("div")
+            tail.className="sender"
+            senderouter.appendChild(msgbox)
+            msgbox.appendChild(tail)
+            document.getElementsByClassName("msgbody")[0].appendChild(senderouter)
+            msgbody.scrollIntoView()
+        }
+        function createuser(username,active){
+            let btn=document.createElement("button")
+            let thumb=document.createElement("img")
+            let detail=document.createElement("div")
+            let head=document.createElement("p")
+            let act=document.createElement("small")
+            btn.className="member"
+            btn.onclick=function (event){
+                getmessages(event)
+            }
+            thumb.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAFdUlEQVRoge2af2hWVRjHP+82cCvmMmjWNLLoB5WwUMjSlm0jdeV/gWskUVlRWRKxgoiQJHMVllKprd9hKP2iiCCzleUiY26amTlqVhqEU5ubK7dle/vjeU73dN977+69770zoi8c3t1znud7nnPPj+d5zh38R5BJkOts4DKgUstEoExLFugF+oB9wA5gO9AKdCVoQ2ycCSwBvkaMjVN2AA8BZ+RjSNwZmQzcD8wDirTuV2AjsA34CvgeZxZAZmYsMnOVwBTgSmCcth8D1gNNwDcx7QqNE4DHgT+QtzkIvARU4wwoCoqAGuBl5coq96NASQL2emIy8pZNZyuAigT5JwArcV7Sd8AFCfIDMAs4rB20ARcl3YGFKUC79tUD1CZFXAUMKPF6UpxyC2OAV7XPIWTp5oVzgUNK+CTJHtcjIYMstSxwEDkkYhN9oURvAAVJWBcRBcCbasPnxHyRNyrBz0Cpq60YuBvYCvyOHLGbVacwBHchcBPiEPuUo005i12ypWpDFrghrPEnAs3IJhtS5fkumfGIn/BzcC2Iv/BDGfBJgP527cPGfJz90gM8q7b6YpUH8T6gwZK5FngemAmcrGUBso6Nzqfkvlm07jNL7gAyM4bnCuAFoN7SqVcb3HY9HTSQbhW6FJgDdFiKC4MUkYPhgCW/2kNmtdXeDZwzAudCS74dmA1M1+f9QYp7VGiGPhcAi7TuhxE6BZgLDKt8n0d7v7YNA1eF4PtR5e/COWxmaN2eIMUtKrTYqqvAOQLD4BE1+GGPtqXatjQkl1mudgSxWOu2BCn2qpC9WVdoXWvIzpNEK44PMxiLkxb4IsqMFACNwG5kGbUAUyMYOVV1+pSjkVxfFXtGgvaIe00+Qe5JMogkVyOhCifatctyl5zZI4uIuEdMODIdqENyC9PJbS7ZIx6GZIFdIQay20fXfUDcabV1ICepObUC9+waD/KfkATKjXbgF2AD8AqyTPaHHMi3KtuiuhuUq81DtkFtcNu1KqiDEsRrmpzgMbwd22ijGLHF5EJrCGmXWTZJJk754jTEpiNejX4R7bD+9qdhUUwc1d8/vRr9BrJTf+sSNyc+jC07A6VcuBlno0/QukpgLZL2po1q4EXgQn2eCOxVmxZEISrEiVK3Atcj5/51SVkaAtcgy6lebTBRdeQE7ySgk38eeUF5RgXwturMxPt6qAgJ1TuBtwg+TEpdfXciuUws1LrIpvnIVZKbM/QgPqBcS4PW2TJ7VdcLl7hka+IOwsAEklngA3Lz5jmIRzZT3+QxKHei1qSyxpu7910G+NDSCQwQw8L4FOMkNyKx0qnAfVb9a8g1Dsg6vgOJXru1bAZux1njY1THpLD3KuflwEdWvV9uExlm0z+H3O+63/Aw8CDxbjgyqmuSMbsc0j6zwKa8RqCYp2RdwHlI1LsLCdo2IRfR+WIWstQOKvdyJHXu0r69Yr3IyODk7h8jp1naGIdz09JBiNkOcwcFsp7rkO8htyKnUBnyKWAYCTbNXomCQuTFlCD7YxpwCxIRn68yy4AvI/L64nQkxvE7idIqx3Aii0CEnZE+4GJk3b4PvIPMQCEyIwP6d1g+gyHlHkD2xzbgdeTm3/TVHJFzRBjn2AuckjS5hXIcv1SVVifGSb1LOjfzGeA97WNdCvx/4ywcT7+SZAdTADyl3IeRiDdVVCNRaRaZoUkJcE7Cme2jSNA5KqhBLg+ywG/APcT37I3KkVXOvL9ORUU5TqyURS4EoqLZ0l+rnMcNc3Eup2dH0KtTnX7g6hTsioUHEKMCv1m48IzqLEnFopioQowaRP4jImiJjFcZc2Ua5op1VNFE9BBk2XGxNARqEWdpvnx5lW6VyTt1/R//ZvwFxioUTHmNNqQAAAAASUVORK5CYII="
+            head.innerText=totitle(username)
+            if(active){
+                act.innerText="Active"
+                act.style.color="green"
+            }else{
+                act.innerText="Offline"
+                act.style.color="indianred"
+            }
+            detail.appendChild(head)
+            detail.appendChild(act)
+            btn.appendChild(thumb)
+            btn.appendChild(detail)
+            document.getElementById("mlist").appendChild(btn)
+        }
+        function totitle(value){
+            return value.toString()[0].toUpperCase()+value.substr(1)
+        }
+        function searchvalue(value){
+            let ele=document.getElementById("mlist").children
+            for(let i=0;i<userstack.length;i++){
+                if(!userstack[i].member.username.toLowerCase().includes(value)){
+                    ele[i].style.display="none"
+                }else{
+                    ele[i].style.display="flex"
+                }
+            }
+        }
+        function getmessages(e){
+            let index=0;
+            let ele=e.target
+            while (ele.tagName!="BUTTON"){
+                ele=ele.parentElement
+            }
+            for(let i=0;i<ele.parentElement.children.length;i++){
+                if(ele.parentElement.children[i]==e.target)
+                    index=i
+            }
+            ename=userstack[index].member.id
+            document.getElementsByClassName("popupback")[0].style.display="flex"
+            fdata=new FormData()
+            fdata.append("id",ename)
+            var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    currentuser=ename
+                    document.getElementsByClassName("popupback")[0].style.display="none"
+                    data=JSON.parse(JSON.parse(this.responseText))
+                    document.getElementsByClassName("freind")[0].innerHTML=totitle(data["username"])
+                    if(data.active) {
+                        document.getElementsByClassName("active")[0].style.color="green"
+                        document.getElementsByClassName("active")[0].innerHTML ="Active"
+                    }else{
+                        document.getElementsByClassName("active")[0].style.color="indianred"
+                        document.getElementsByClassName("active")[0].innerHTML ="Offline"
+                    }
+                    data=data["msg"]
+                    document.getElementsByClassName("msgbody")[0].innerHTML=""
+                    for(let i=0;i<data.length;i++){
+                        if(data[i].str){
+                            appearsendermsg(data[i].message)
+                        }else{
+                            appearreceivemsg(data[i].message)
+                        }
+                    }
+                    document.getElementsByClassName("page1")[0].style.width="0"
+                }
+              };
+              xhttp.open("POST", "/getchats", true);
+              xhttp.send(fdata);
+        }
+        function sendmsg(value){
+            appearsendermsg(value)
+            document.getElementById('msgarea').value=""
+            channel.send(JSON.stringify({"userid": currentuser,"data": value}))
+        }
+        function openconnection(e){
+            document.getElementsByClassName("popupback")[0].style.display="none"
+        }
+        function messagehandler(e,uid,msg){
+            switch (e){
+                case 2001:
+                    if(currentuser==uid){
+                        appearreceivemsg(msg)
+                    }else{
+                        pending=document.createElement("div")
+                        pending.className="pending"
+                        for(let i=0;i<members.length;i++) {
+                            if (data["uid"] == userstack[i]["member"]["id"]) {
+                                members[i].appendChild(pending)
+                            }
+                        }
+                    }
+                    break;
+                case 4000:
+                    members=document.getElementById("mlist").children
+                    if(currentuser==uid) {
+                        document.getElementsByClassName("active")[0].style.color = "green"
+                        document.getElementsByClassName("active")[0].innerHTML = "Active"
+                    }
+                    for(let i=0;i<members.length;i++){
+                        if(data["uid"]==userstack[i]["member"]["id"]){
+                            let ele = members[i].children[1].children[1]
+                            ele.style.color = "green"
+                            ele.innerText = "Active"
+                        }
+                    }
+                    break;
+                case 3006:
+                    if(currentuser==uid) {
+                        document.getElementsByClassName("active")[0].style.color = "indianred"
+                        document.getElementsByClassName("active")[0].innerHTML = "Offline"
+                    }
+                    for(let i=0;i<members.length;i++){
+                        if(data["uid"]==userstack[i]["member"]["id"]){
+                            let ele = members[i].children[1].children[1]
+                            ele.style.color = "indianred"
+                            ele.innerText = "Offline"
+                        }
+                    }
+                    break;
+
+            }
+        }
+        function initconnection(){
+            document.getElementsByClassName("popupback")[0].style.display="flex"
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    userstack=JSON.parse(this.responseText)["data"]
+                    for(let i=0;i<userstack.length;i++){
+                        createuser(userstack[i]["member"]["username"], userstack[i]["active"])
+                    }
+                    channel=new WebSocket("ws://"+location.host+"/chat")
+                    channel.onopen=function(e){
+                        console.log(e)
+                        openconnection(e)
+                    }
+                    channel.onmessage=function(e){
+                        data=JSON.parse(e.data)
+                        messagehandler(data.code,data.uid,data.text)
+                    }
+                    channel.onclose=function(e){
+                        console.log(e)
+                        closeconnection(e)
+                    }
+                }
+              };
+              xhttp.open("GET", "/getchannels", true);
+              xhttp.send();
+        }
+        function generatepopup(message,ub){
+            outer=document.createElement("div")
+            popup=document.createElement("div")
+            image=document.createElement("img")
+            head=document.createElement("h1")
+            body=document.createElement("p")
+            head.innerText="Unhandled Exception"
+            body.innerHTML=message
+            outer.className="popupback"
+            popup.className="popup"
+            image.setAttribute("src","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAACL0lEQVRoge3ZzWrUUBjG8V/9KIhFdGEV9AZ05060G9Hu1U3BGxDxA6+ie10JgogLFyJ1IUoFV4Jb8QJURHSwLYg4IqK1cZEzOGWazJyZJBPb/OElQ86b5HlyPnLOGRo2N5O4iS/4gLmusvN4g6+4h32Vq4vgLpKuWJMauxF+d5e9xI7xyMznuPVCB4lrY1HahwfijbzFtnGIzWIav8UbSTBbhICi3sZZw7f3uf4p1fHUcLWR4CMmqpe8np04hZ+GN5LgAnZVrB0cw218ixDbL37gPmaqMDCFW3q/CUXHAg6WaeROyQa641WMsNhR61dk/iisxiRvj7z5E7zGd+lbm8Buo486CZbxDs+lU5rr+DPifaOYt75tv0BbdpNph5yFrnPzVQrO4qh/nf9iODeJq3pNXAllcCmcW8ORCvXm8lgq6j3O4DSe6TWyGMpmpdP8JFzbsKU4h5bqvhv9oiWdnEZTJxOd+JQlNm/8T+J8V8aGmmu1OhuFxkjdaIzUjcZI3WiM1I0yjJyQTuWzmMHJEp6byTBzoXa4dionZyrk5K0i82JDiq6RpXA8kJMzHY7LRT64aCMdcdM5Of+FkU6NDGJkKScnmnHUSKfZ1bpGNk3TWgnH/Tk5nbKVnJxotkQfaQ1xv85bLquPZK7Z84xcFm+mzD7SCpoq5bPsL3OhTapM9kr/Esgysoo9Y1M3IIfxSP/50kMcGpPGXDbasB40FosQUNTwO8pmXl03AhtG4i/1boL+GLKbiQAAAABJRU5ErkJggg==")
+            popup.appendChild(image)
+            popup.appendChild(head)
+            popup.appendChild(body)
+            outer.appendChild(popup)
+            if(ub){
+                forward=document.createElement("a")
+                forward.href="/uhere"
+                usehere=document.createElement("button")
+                usehere.innerText="Use here"
+                forward.appendChild(usehere)
+                popup.appendChild(forward)
+            }
+            document.getElementsByTagName("body")[0].appendChild(outer)
+        }
+        function closeconnection(e){
+            switch (e.code){
+                case 1901:
+                    generatepopup("You are logged out so you can\'t access chat panel. kindly login and try again",false)
+                    break;
+                case 3000:
+                    generatepopup("Your chat panel is being used somewhere else",true)
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

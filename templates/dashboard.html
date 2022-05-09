@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dcs</title>
+    <link rel="stylesheet" href="/static/navbar.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body{
+            box-sizing: border-box;
+        }
+        table{
+            border-collapse:collapse;
+            width: 100%;
+            text-align: center;
+        }
+        table td{
+            border-bottom: 1px solid #c1c1c1;
+        }
+        table td p{
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+        .content{
+            width: 100%;margin: 20px 0px;padding:15px;box-sizing: border-box
+        }
+        .content .header{
+            background-color: #efefef;
+            font-size: 19px;
+        }
+        .content button{
+            background-color: #00A5EC;
+            color: white;
+            border: 0;
+            border-radius: 0.2em;
+            padding: 5px 12px;
+            font-size: 14px;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <nav>
+        <div>
+            <div class="navigation">
+                <div class="brand">
+                    <h1>Dark cyber securities</h1>
+                </div>
+                <div class="menuitems">
+                    <p><a href="/">Home</a></p>
+                    <p><a href="/services">Services</a></p>
+                    <p><a href="/category">Start learning</a></p>
+                    <p><a href="#">Resources</a></p>
+                    <p><a href="#">Contact us</a></p>
+                    {% if request.user.is_anonymous %}
+                        <p><a href="/login">Log In</a></p>
+                        {% else %}
+                        <p><a href="/account">Account</a></p>
+                        <p><a href="/logout">Logout</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div>
+        <h1 style="font-weight: 100;text-align: center;font-size: 25px;">Dashboard</h1>
+    </div>
+    <div class="content">
+    <table>
+        <tr class="header">
+            <th><p>Course</p></th>
+            <th><p>Start date</p></th>
+            <th><p>End date</p></th>
+            <th><p>Status</p></th>
+        </tr>
+            {% for i in courses %}
+                <tr>
+                    <td><p>{{ i.course.course.name | title }}</p></td>
+                    <td><p>{{ i.course.enrolledon|date }}</p></td>
+                    {% ifnotequal i.course.completedon None %}
+                    <td><p>{{ i.course.completedon|date }}</p></td>
+                    {% else %}
+                    <td><p>---</p></td>
+                    {% endifnotequal %}
+                    <td>
+                        {% if i.enrolled %}
+                            <a href="/courseindex?cid={{i.course.course.id}}"><button>Go to the training</button></a>
+                        {% else %}
+                            <a href="/enroll?eid={{i.course.course.course.id}}"><button>Renew subscription</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td style="padding:10px 0">----</td>
+                    <td style="padding:10px 0">----</td>
+                    <td style="padding:10px 0">----</td>
+                    <td style="padding:10px 0">----</td>
+                </tr>
+            {% endfor %}
+    </table>
+    </div>
+</body>
+</html>

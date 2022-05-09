@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{block.super}}
+<link rel="stylesheet" href="/static/services.css">
+{% endblock styles %}
+
+{% block content %}
+<section id="services" class="services">
+
+  <div class="container" data-aos="fade-up">
+
+    <header class="section-header">
+      <p>Services</p>
+    </header>
+
+    <div class="row gy-4">
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="service-box blue">
+          <i class="ri-discuss-line icon"></i>
+          <h3>IT Consulting</h3>
+          <p>Gear up to compete with this Innovative world and be the best in the market with our flexible IT Consulting services.</p>
+          <!--a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a-->
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="service-box orange">
+          <i class="ri-discuss-line icon"></i>
+          <h3>Software Architecture Consulting</h3>
+          <p>Get in touch with our Architecture Consultants to have the best foundation for your software applications.</p>
+          <!--a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a-->
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="service-box green">
+          <i class="ri-discuss-line icon"></i>
+          <h3>Ideation + Design</h3>
+          <p>Make your users fall in love with your product with the help of DCS's Expert Designers enabling you to rule the digital world.</p>
+          <!--a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a-->
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+        <div class="service-box red">
+          <i class="ri-discuss-line icon"></i>
+          <h3>Staff Augmentation</h3>
+          <p>Accelerate your existing workforce without hiring any in-house employees and eliminate the cost overhead that comes with it.</p>
+          <!--a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a-->
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+        <div class="service-box purple">
+          <i class="ri-discuss-line icon"></i>
+          <h3>Application Engineering</h3>
+          <p>DCS's works closely with you to understand all your technical requirements and delivers the finest applications that meet all your needs.</p>
+          <!--a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a-->
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="700">
+        <div class="service-box pink">
+          <i class="ri-discuss-line icon"></i>
+          <h3>Tech Support</h3>
+          <p>Reliable tech support from certified professionals for all business requirements including software support, customer support, maintenance support and periodic system audits.</p>
+          <!--a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a-->
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section id="contact" class="contact">
+    <div class="container" data-aos="fade-up">
+      <header class="section-header">
+        <p>Contact Us</p>
+      </header>
+      <div class="row gy-4">
+        <div class="col-lg-6">
+          <div class="row gy-4">
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-geo-alt"></i>
+                <h3>Address</h3>
+                <p>
+                    #1636/16,First Floor <br>
+                    Sham Nagar,Sector-16<br>
+                    Karnal,132001 HR <br><br></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-telephone"></i>
+                <h3>Call Us</h3>
+                <p>+91 85580 28559<br>+91 70093 94709</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-envelope"></i>
+                <h3>Email Us</h3>
+                <p>info@darkcybersecurities.com<br>dhruv@darkcybersecurities.com</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-clock"></i>
+                <h3>Open Hours</h3>
+                <p>Monday - Saturday<br>9:00AM - 09:00PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <form action="/addquery" method="post" class="php-email-form">
+            <div class="row gy-4">
+              {% csrf_token %}
+              <div class="col-md-6">
+                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+              </div>
+              <div class="col-md-6 ">
+                <input type="text" class="form-control" name="company" placeholder="Organization">
+              </div>
+              <div class="col-md-6">
+                <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+              </div>
+              <div class="col-md-6 ">
+                <input type="tel" maxlength="10" class="form-control" name="phone" placeholder="Phone Number" required>
+              </div>
+              <div class="col-md-12">
+                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+              </div>  
+              <div class="col-md-12">
+                <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+              </div>
+
+              <div class="col-md-12 text-center">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your request has been submitted.Thank you!</div>
+
+                <button type="submit">Send Message</button>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>  
+
+{% endblock content %}

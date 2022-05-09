@@ -1,0 +1,475 @@
+    {% extends 'base.html' %}
+    {% block styles %}
+    {{block.super}}
+        <style>
+                    .container2{
+                        position: fixed;
+                        width: 100%;
+                        height: 90%;
+                        overflow: hidden;
+                        box-sizing: border-box;
+                        bottom: 0;
+                        z-index: 2;
+                        background-color: white;
+                    }
+                    .submit-panel{
+                        display: flex;
+                        justify-content: flex-end;
+                        align-items:center;
+                        overflow: auto;
+                    }
+                    .lds-ring {
+                        overflow: hidden;
+                        position: relative;
+                        width: 0;
+                        height: 40px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .lds-ring div {
+                    box-sizing: border-box;
+                    display: block;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    border: 3px solid blue;
+                    border-radius: 50%;
+                    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                    border-color: blue transparent transparent transparent;
+                    }
+                    .lds-ring div:nth-child(1) {
+                    animation-delay: -0.45s;
+                    }
+                    .lds-ring div:nth-child(2) {
+                    animation-delay: -0.3s;
+                    }
+                    .lds-ring div:nth-child(3) {
+                    animation-delay: -0.15s;
+                    }
+                    @keyframes lds-ring {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                    }
+                    .topic{
+                        overflow:auto;
+                        padding:10px;
+                        border-bottom:1px solid #bdbdbd;
+                        display:flex;
+                        align-items:center;
+                        cursor:pointer;
+                        margin:10px 0;
+                    }
+                    .playlist a{
+                        color:black;
+                        text-decoration:none
+                    }
+                    .topic img{
+                        width:20px;
+                        margin:0 3px;
+                    }
+                    .topic p{
+                        margin:5px 3px;
+                    }
+                    .selected{
+                        border-bottom:2px solid blue;
+                    }
+                    .display iframe{
+                        width:100%;
+                        height:100%;
+                    }
+                    .display .present{
+                        width:100%;
+                        height:90%;
+                    }
+                    .display{
+                        position:absolute;
+                        top:0;
+                        height:100%;
+                        right:0;
+                        width:85%;
+                        overflow:auto;
+                        padding:10px;
+                        box-sizing:border-box
+                    }
+                    .instructionpanel ul{
+                        margin:30px 0;
+                        line-height:30px;
+                    }
+                    .instructionpanel button{
+                        font-size:16px;
+                        float:left;
+                        padding:8px 15px;
+                    }
+                    .display .head{
+                        display:flex;justify-content:center;align-items:center;height:10%;
+                    }
+                    .display .head p{
+                        font-size:25px;
+                        cursor:default;
+                    }
+                    .display .head img{
+                        margin:0 15px;
+                        width:35px
+                    }
+                    .playlist{
+                        position:absolute;
+                        top:0;
+                        height:100%;
+                        left:0;
+                        width:15%;
+                        overflow:auto;
+                        padding: 10px 0 10px 10px;
+                        box-sizing:border-box;
+                        border-right:1px solid #dadada
+                    }
+                    ol li{
+                        margin:30px 0;
+                    }
+                    .assignmentframe{
+                        overflow:auto;
+                    }
+                    .option{
+                        border:1px solid #d4d4d4;
+                        border-radius:0.2em;
+                        margin:20px 0;
+                        display:flex;
+                        align-items:center;
+                    }
+                    .option div{
+                        padding:5px 10px;
+                    }
+                    .option .select{
+                        background-color: #f1f1f1;
+                        align-self:normal;
+                        display:flex;
+                        align-items:center;
+                    }
+                    ol{
+                        width:90%
+                    }
+                    button{
+                        float:right;
+                        background-color: #00A5EC;
+                        color: white;
+                        border: 0;
+                        border-radius: 0.2em;
+                        padding: 5px 12px;
+                        font-size: 14px;
+                        cursor:pointer
+                    }
+                    .scorechart{
+                        display:flex;
+                        justify-content:center;
+                    }
+                    .score{
+                        float:right
+                    }
+                    .playlist .element{
+                        overflow:auto;
+                    }
+                    .question{
+                        display:flex;justify-content:space-between;
+                    }
+                    ::-webkit-scrollbar {
+                    width: 10px;
+                    }
+                    ::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    }
+
+                    /* Handle */
+                    ::-webkit-scrollbar-thumb {
+                    background: #888;
+                    }
+
+                    /* Handle on hover */
+                    ::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                    }
+        </style>
+    {% endblock %}
+    {%  block content %}
+    <div class="container2">
+        <div class="playlist">
+            <div class="element">
+                <p style="color:gray;font-size:22px;">Topics</p>
+            </div>
+            <div onmouseleave="changeselection(content)" id="content">
+
+            </div>
+        </div>
+        <div class="display"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script  type="text/javascript">
+        let content;
+        let currentselection;
+        let material;
+        let scores=[]
+        let properties={
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Score',
+                    data: [],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                },
+                barThickness:60
+            }
+        }
+        let optiontranslator={1:"A",2:"B",3:"C",4:"D"};
+        function getselectedcontent(){
+            importcontent()
+        }
+        document.getElementsByTagName("body")[0].onload=()=>{
+            getselectedcontent()
+        }
+        function addhead(thumbnail,ltitle,classname){
+            let boundry=document.createElement("div")
+            let thumb=document.createElement("img")
+            let title=document.createElement("p")
+            thumb.src=thumbnail
+            boundry.className=classname
+            title.innerText=ltitle
+            boundry.appendChild(thumb)
+            boundry.appendChild(title)
+            document.getElementsByClassName("display")[0].innerHTML=``
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+        }
+        function addvideo(url,classname){
+            let boundry=document.createElement("div")
+            let content=document.createElement("iframe")
+            content.src=url
+            boundry.className=classname
+            boundry.appendChild(content)
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+        }
+        function displayquestions(material,questions){
+            let outerboundry=document.createElement("DIV")
+            let qlist=document.createElement("ol")
+            let form=document.createElement("form")
+            form.id="qpaper"
+            for(let i in material){
+                let qpart=document.createElement("li")
+                let question=document.createElement("DIV")
+                let problem=document.createElement("p")
+                let weight=document.createElement("p")
+                outerboundry.appendChild(qlist)
+                qlist.appendChild(qpart)
+                qpart.appendChild(question)
+                question.className="question"
+                problem.innerText=material[i][0]
+                question.appendChild(problem)
+                weight.innerText="1 mark"
+                question.appendChild(weight)
+                for(let j=1;j<material[i].length;j++){
+                    let option=document.createElement("DIV")
+                    let select=document.createElement("DIV")
+                    let labelouter=document.createElement("DIV")
+                    let label=document.createElement("p")
+                    let input=document.createElement("input")
+                    input.type="radio"
+                    input.name=i
+                    input.value=optiontranslator[j]
+                    option.className="option"
+                    qpart.appendChild(option)
+                    select.className="select"
+                    option.appendChild(select)
+                    select.appendChild(input)
+                    label.innerText=material[i][j]
+                    labelouter.appendChild(label)
+                    option.appendChild(labelouter)
+                }
+            }
+            let submitboundry=document.createElement("DIV");
+            submitboundry.className="submit-panel"
+            let submit=document.createElement("button")
+            let loader=document.createElement("DIV")
+            loader.className="lds-ring"
+            loader.innerHTML=`<div></div><div></div><div></div><div></div>`
+            submit.innerText="Submit"
+            form.onsubmit=()=>{
+                return validator(questions);
+            }
+            submitboundry.appendChild(submit)
+            submitboundry.appendChild(loader)
+            qlist.appendChild(submitboundry)
+            form.appendChild(outerboundry)
+            outerboundry.className="present assignmentframe"
+            document.getElementsByClassName("display")[0].appendChild(form)
+        }
+        function sendforvalidation(data){
+            document.getElementsByClassName("lds-ring")[0].style.width = "40px"
+            document.getElementsByClassName("lds-ring")[0].parentElement.children[0].disabled=true;
+            let fdata=new FormData();
+            fdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+            fdata.append("paper",JSON.stringify(data))
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if(xhttp.readyState==4 && xhttp.status==200){
+                    document.getElementsByClassName("lds-ring")[0].style.width = "0px"
+                    document.getElementsByClassName("lds-ring")[0].parentElement.children[0].disabled=false;
+                    let res=JSON.parse(xhttp.responseText)
+                    material["scores"].push(res)
+                    document.getElementById("content").children[document.getElementById("content").children.length-1].click()
+                }
+            }
+            xhttp.open("POST", "/validator",true);
+            xhttp.send(fdata);
+            return false;
+        }
+        function validator(questions){
+            let form=document.getElementsByTagName("form")[0];
+            let assignment=questions
+            let k=0
+            let yanswer={}
+            for(let i in assignment){
+                for(let j=0;j<4;j++){
+                    if(form[k+j].checked){
+                        yanswer[i]=form[k+j].value
+                    }
+                }
+                if(!yanswer[i]){
+                    return false;
+                }
+                k+=4
+            }
+            return sendforvalidation(yanswer)
+        }
+        function displayinstructions(assignment,attempt){
+            let instructions=["You need to attempt all quesions in order to submit the test","This test consists of "+assignment["questions"]+" questions","You will be be getting maximum "+assignment["attempts allowed"]+" attempts for this test","You need to get at least 75% in this test to get eligible for certificate"]
+            let boundry=document.createElement("DIV");
+            boundry.className="instructionpanel"
+            let head=document.createElement("h3");
+            head.innerText="You need to read following instructions before attempting the test"
+            boundry.appendChild(head)
+            let list=document.createElement("ul")
+            for(let i in instructions){
+                let element=document.createElement("li");
+                element.innerText=instructions[i]
+                list.appendChild(element)
+            }
+            boundry.appendChild(list)
+            let start=document.createElement("button")
+            start.innerText="Start Attempt "+(attempt+1)
+            start.setAttribute("onclick","importassignment("+assignment.id+")")
+            boundry.appendChild(start)
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+        }
+        function showassignment(){
+            currentselection=document.getElementById("content").children
+            currentselection=currentselection[currentselection.length-2]
+            content=currentselection
+            addhead("/static/images/quiz.png","Module Test","head")
+            let assignment=material["assignment"]
+            displayinstructions(assignment,material["scores"].length);
+        }
+        function add(thumbnail,ltitle,classname,execution_function){
+            let boundry=document.createElement("div")
+            let thumb=document.createElement("img")
+            let title=document.createElement("p")
+            thumb.src=thumbnail
+            boundry.className=classname
+            boundry.setAttribute("onmouseover","changeselection(event.target)")
+            boundry.setAttribute("onclick",execution_function)
+            title.innerText=ltitle
+            boundry.appendChild(thumb)
+            boundry.appendChild(title)
+            document.getElementById("content").appendChild(boundry)
+        }
+        function leaderboard(){
+            currentselection=document.getElementById("content").children
+            currentselection=currentselection[currentselection.length-1]
+            content=currentselection
+            addhead("/static/images/quiz.png","Score Board","head")
+            let boundry=document.createElement("DIV");
+            let canvas=document.createElement("canvas");
+            boundry.className="scorechart"
+            canvas.id="myChart"
+            boundry.appendChild(canvas)
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+            properties["data"]["datasets"][0]["data"]=[]
+            properties["data"]["labels"]=[]
+            for(let i=0;i<material["assignment"]["attempts allowed"];i++){
+                properties["data"]["labels"].push("Attempt "+(i+1))
+            }
+            for(let i=0;i<material["scores"].length;i++){
+                properties["data"]["datasets"][0]["data"].push(material["scores"][i]["score"])
+            }
+            var mychart=new Chart(document.getElementById('myChart'),properties)
+        }
+        function playlecture(index){
+            currentselection=document.getElementById("content").children[index]
+            content=document.getElementById("content").children[index]
+            addhead("https://img.icons8.com/ios/50/000000/circled-play--v1.png",material["lectures"][index].name,"head")
+            addvideo(material["lectures"][index].url,"present")
+            document.getElementById("content").children[index].className="topic selected"
+        }
+        function setcontent(material,attempt_allowed){
+            for(let i=0;i<material.length;i++){
+                add("https://img.icons8.com/ios/50/000000/circled-play--v1.png",material[i].name,"topic","playlecture("+document.getElementById("content").children.length+")")
+            }
+            console.log(material)
+            if(attempt_allowed){
+                add("/static/images/quiz.png","Module Test","topic","showassignment()")
+            }else{
+                add("/static/images/lock.svg","Module Test","topic","return false")
+            }
+            add("/static/images/quiz.png","Score Board","topic","leaderboard()")
+            playlecture(0)
+        }
+        function importassignment(aid){
+          let fdata=new FormData();
+          fdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+          fdata.append("aid",aid);
+          const xhttp = new XMLHttpRequest();
+          xhttp.onload =()=>{
+               if(xhttp.readyState==4 && xhttp.status==200){
+                let x=JSON.parse(xhttp.responseText)
+                document.getElementsByClassName("instructionpanel")[0].remove()
+                displayquestions(x["assignment"],x["assignment"])
+               }
+          }
+          xhttp.open("POST", "/getassignment", true);
+          xhttp.send(fdata);
+        }
+        function importcontent() {
+          const xhttp = new XMLHttpRequest();
+          xhttp.onload =()=>{
+               if(xhttp.readyState==4 && xhttp.status==200){
+                   material=JSON.parse(xhttp.responseText)
+                   setcontent(material["lectures"],material["assignment"]["attempts allowed"]>material["scores"].length)
+               }
+          }
+          xhttp.open("GET", "/getcontent?mid={{request.GET.mid}}", true);
+          xhttp.send();
+        }
+        function changeselection(element){
+            while(element.tagName!="DIV"){
+                element=element.parentElement;
+            }
+            currentselection.className="topic"
+            currentselection=element
+            currentselection.className="topic selected"
+        }
+    </script>
+{% endblock content %}

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <head>
+      <title>DCS</title>
+      <link rel="stylesheet" href="/static/navbar-mobile.css">
+      <link rel="stylesheet" href="/static/style.css">
+        <style>
+            .container{
+                position: fixed;
+                width: 100%;
+                height: 90%;
+                overflow: hidden;
+                box-sizing: border-box;
+                bottom: 0;
+                display:flex;
+            }
+            .submit-panel{
+                display: flex;
+                justify-content: flex-end;
+                align-items:center;
+                overflow: auto;
+            }
+            .lds-ring {
+                overflow: hidden;
+                position: relative;
+                width: 0;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .lds-ring div {
+              box-sizing: border-box;
+              display: block;
+              position: absolute;
+              width: 20px;
+              height: 20px;
+              border: 3px solid blue;
+              border-radius: 50%;
+              animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+              border-color: blue transparent transparent transparent;
+            }
+            .lds-ring div:nth-child(1) {
+              animation-delay: -0.45s;
+            }
+            .lds-ring div:nth-child(2) {
+              animation-delay: -0.3s;
+            }
+            .lds-ring div:nth-child(3) {
+              animation-delay: -0.15s;
+            }
+            @keyframes lds-ring {
+              0% {
+                transform: rotate(0deg);
+              }
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+            .topic{
+                overflow:auto;
+                padding:10px;
+                border-bottom:1px solid #bdbdbd;
+                display:flex;
+                align-items:center;
+                cursor:pointer;
+                margin:10px 0;
+                overflow-x:hidden;
+                white-space:nowrap;
+            }
+            .playlist a{
+                color:black;
+                text-decoration:none
+            }
+            .topic img{
+                width:20px;
+                margin:0 3px;
+            }
+            .topic p{
+                margin:5px 3px;
+            }
+            .selected{
+                border-bottom:2px solid blue;
+            }
+            .display iframe{
+                width:100%;
+                height:100%;
+            }
+            .display .present{
+                width: 98%;
+                height: 93%;
+                margin: 10px auto;
+                box-sizing: border-box;
+            }
+            .instructionpanel{
+                margin:40px 0;
+            }
+            .instructionpanel h3{
+                line-height:32px
+            }
+            .display{
+                height:100%;
+                width:0%;
+                overflow:hidden auto;
+                box-sizing:border-box;
+                transition:1s ease-in-out;
+                margin:auto;
+                position:relative
+            }
+            .instructionpanel ul{
+                margin:30px 0;
+                line-height:30px;
+            }
+            .instructionpanel button{
+                font-size:16px;
+                float:left;
+                padding:8px 15px;
+            }
+            .display .head{
+                display:flex;justify-content:center;align-items:center;position:relative;white-space:nowrap
+            }
+            .display .head p{
+                font-size:25px;
+                cursor:default;
+                margin:0;
+            }
+            .display .head img{
+                margin:0 15px;
+                width:35px
+            }
+            .playlist{
+                height:100%;
+                width:95%;
+                overflow:auto;
+                box-sizing:border-box;
+                transition:1s ease-in-out;
+                overflow-x:hidden;
+                margin:auto;
+            }
+            ol li{
+                margin:30px 0;
+            }
+            .assignmentframe{
+                overflow:auto;
+            }
+            .option{
+                border:1px solid #d4d4d4;
+                border-radius:0.2em;
+                margin:20px 0;
+                display:flex;
+                align-items:center;
+            }
+            .option div{
+                padding:5px 10px;
+            }
+            .option .select{
+                background-color: #f1f1f1;
+                align-self:normal;
+                display:flex;
+                align-items:center;
+            }
+            ol{
+                padding: 0 16px;
+            }
+            button{
+                float:right;
+                background-color: #00A5EC;
+                color: white;
+                border: 0;
+                border-radius: 0.2em;
+                padding: 5px 12px;
+                font-size: 14px;
+                cursor:pointer
+            }
+            .scorechart{
+                display:flex;
+                justify-content:center;
+            }
+            .score{
+                float:right
+            }
+            .playlist .element{
+                overflow:hidden auto;
+            }
+            .question{
+                display:flex;justify-content:space-between;
+            }
+            ::-webkit-scrollbar {
+              width: 10px;
+            }
+            ::-webkit-scrollbar-track {
+              background: #f1f1f1;
+            }
+
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+              background: #888;
+            }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+              background: #555;
+            }
+
+        </style>
+    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body onload="getselectedcontent()">
+    <nav>
+        <div>
+            <div class="navigation">
+                <div class="brand">
+                    <h1>Dark cyber securities</h1>
+                </div>
+                <div onclick="navcontroller(event)" class="navbutton">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div onclick="navcontroller(event)" style="width: 0%" class="sidenavouter">
+        <div style="width: 0%" class="sidenav">
+            <div class="sidenavheader">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 172 172" style=" fill:#4a90e2;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M86,6.90688c-43.65602,0 -79.12,35.46398 -79.12,79.12c0,41.63931 32.27171,75.80172 73.1336,78.87141c0.08056,0.00655 0.16115,0.01386 0.24187,0.02015c1.9,0.13691 3.80998,0.22844 5.74453,0.22844c1.93455,0 3.84453,-0.09153 5.74453,-0.22844c0.08072,-0.0063 0.16131,-0.01361 0.24187,-0.02015c40.86189,-3.06969 73.1336,-37.2321 73.1336,-78.87141c0,-43.65602 -35.46398,-79.12 -79.12,-79.12zM86,13.78688c39.93779,0 72.24,32.3022 72.24,72.24c0,19.71706 -7.89544,37.55193 -20.6736,50.57875c-5.46671,-3.98083 -12.22246,-6.35558 -18.275,-8.47906c-7.16896,-2.5112 -13.95113,-4.89168 -15.82937,-9.03c-0.29584,-3.53288 -0.2694,-6.29176 -0.24188,-9.46l0.00672,-1.34375c3.05472,-2.9068 6.89623,-9.04167 8.21031,-14.70735c2.2704,-1.21088 5.04643,-4.11354 5.87891,-11.06578c0.41624,-3.45032 -0.56572,-6.12245 -1.94172,-7.91469c1.8576,-6.3812 5.55361,-22.53555 -0.92047,-32.96219c-2.73824,-4.40664 -6.87027,-7.18686 -12.30203,-8.28422c-3.05128,-3.77712 -8.80925,-5.83859 -16.50797,-5.83859c-11.69944,0.21672 -20.27622,3.80018 -25.4775,10.64922c-6.13352,8.084 -7.29248,20.29804 -3.45344,36.32156c-1.42072,1.79224 -2.44546,4.50307 -2.02234,8.02219c0.83592,6.95224 3.60179,9.8549 5.87219,11.06578c1.31408,5.67256 5.15215,11.80726 8.21031,14.71406l0.00672,1.31015c0.02752,3.182 0.05396,5.94696 -0.24188,9.4936c-1.88512,4.14864 -8.69992,6.55503 -15.90328,9.09719c-6.0162,2.12442 -12.73196,4.50283 -18.18765,8.43203c-12.78804,-13.02829 -20.68703,-30.87322 -20.68703,-50.59891c0,-39.93779 32.30221,-72.24 72.24,-72.24z"></path></g></g></svg>
+                <p>Login or register</p>
+            </div>
+            <div class="sidenavbody">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    {% if request.user.is_anonymous %}
+                        <li><a href="/login">Login</a></li>
+                        {% else %}
+                        <li><a href="/account">Account</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="playlist">
+            <div class="element">
+                <p style="color:gray;font-size:22px;">Topics</p>
+            </div>
+            <div onmouseleave="changeselection(content)" id="content">
+
+            </div>
+        </div>
+        <div class="display"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/javascript/navbar.js"></script>
+    <script  type="text/javascript">
+        let content;
+        let currentselection;
+        let material;
+        let scores=[]
+        let properties={
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Score',
+                    data: [],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                },
+                barThickness:60
+            }
+        }
+        let optiontranslator={1:"A",2:"B",3:"C",4:"D"};
+        function getselectedcontent(){
+            importcontent()
+        }
+        function addhead(thumbnail,ltitle,classname){
+            let boundry=document.createElement("div")
+            let thumb=document.createElement("img")
+            let title=document.createElement("p")
+            thumb.src=thumbnail
+            boundry.className=classname
+            title.innerText=ltitle
+            boundry.appendChild(thumb)
+            boundry.appendChild(title)
+            boundry.innerHTML+=`<img onclick='decompress()' src='https://img.icons8.com/ios-glyphs/30/000000/circled-left-2.png' style='position:absolute;top:0;left:0;height:100%' />`
+            document.getElementsByClassName("display")[0].innerHTML=``
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+        }
+        function addvideo(url,classname){
+            let boundry=document.createElement("div")
+            let content=document.createElement("iframe")
+            content.src=url
+            boundry.className=classname
+            boundry.appendChild(content)
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+        }
+        function displayquestions(material,questions){
+            let outerboundry=document.createElement("DIV")
+            let qlist=document.createElement("ol")
+            let form=document.createElement("form")
+            form.id="qpaper"
+            for(let i in material){
+                let qpart=document.createElement("li")
+                let question=document.createElement("DIV")
+                let problem=document.createElement("p")
+                let weight=document.createElement("p")
+                outerboundry.appendChild(qlist)
+                qlist.appendChild(qpart)
+                qpart.appendChild(question)
+                question.className="question"
+                problem.innerText=material[i][0]
+                question.appendChild(problem)
+                weight.innerText="1 mark"
+                question.appendChild(weight)
+                for(let j=1;j<material[i].length;j++){
+                    let option=document.createElement("DIV")
+                    let select=document.createElement("DIV")
+                    let labelouter=document.createElement("DIV")
+                    let label=document.createElement("p")
+                    let input=document.createElement("input")
+                    input.type="radio"
+                    input.name=i
+                    input.value=optiontranslator[j]
+                    option.className="option"
+                    qpart.appendChild(option)
+                    select.className="select"
+                    option.appendChild(select)
+                    select.appendChild(input)
+                    label.innerText=material[i][j]
+                    labelouter.appendChild(label)
+                    option.appendChild(labelouter)
+                }
+            }
+            let submitboundry=document.createElement("DIV");
+            submitboundry.className="submit-panel"
+            let submit=document.createElement("button")
+            let loader=document.createElement("DIV")
+            loader.className="lds-ring"
+            loader.innerHTML=`<div></div><div></div><div></div><div></div>`
+            submit.innerText="Submit"
+            form.onsubmit=()=>{
+                return validator(questions);
+            }
+            submitboundry.appendChild(submit)
+            submitboundry.appendChild(loader)
+            qlist.appendChild(submitboundry)
+            form.appendChild(outerboundry)
+            outerboundry.className="present assignmentframe"
+            document.getElementsByClassName("display")[0].appendChild(form)
+        }
+        function sendforvalidation(data){
+            document.getElementsByClassName("lds-ring")[0].style.width = "40px"
+            document.getElementsByClassName("lds-ring")[0].parentElement.children[0].disabled=true;
+            let fdata=new FormData();
+            fdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+            fdata.append("paper",JSON.stringify(data))
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if(xhttp.readyState==4 && xhttp.status==200){
+                    document.getElementsByClassName("lds-ring")[0].style.width = "0px"
+                    document.getElementsByClassName("lds-ring")[0].parentElement.children[0].disabled=false;
+                    let res=JSON.parse(xhttp.responseText)
+                    material["scores"].push(res)
+                    document.getElementById("content").children[document.getElementById("content").children.length-1].click()
+                }
+            }
+            xhttp.open("POST", "/validator",true);
+            xhttp.send(fdata);
+            return false;
+        }
+        function validator(questions){
+            let form=document.getElementsByTagName("form")[0];
+            let assignment=questions
+            let k=0
+            let yanswer={}
+            for(let i in assignment){
+                for(let j=0;j<4;j++){
+                    if(form[k+j].checked){
+                        yanswer[i]=form[k+j].value
+                    }
+                }
+                if(!yanswer[i]){
+                    return false;
+                }
+                k+=4
+            }
+            return sendforvalidation(yanswer)
+        }
+        function displayinstructions(assignment,attempt){
+            let instructions=["You need to attempt all quesions in order to submit the test","This test consists of "+assignment["questions"]+" questions","You will be be getting maximum "+assignment["attempts allowed"]+" attempts for this test","You need to get at least 75% in this test to get eligible for certificate"]
+            let boundry=document.createElement("DIV");
+            boundry.className="instructionpanel"
+            let head=document.createElement("h3");
+            head.innerText="You need to read following instructions before attempting the test"
+            boundry.appendChild(head)
+            let list=document.createElement("ul")
+            for(let i in instructions){
+                let element=document.createElement("li");
+                element.innerText=instructions[i]
+                list.appendChild(element)
+            }
+            boundry.appendChild(list)
+            let start=document.createElement("button")
+            start.innerText="Start Attempt "+(attempt+1)
+            start.setAttribute("onclick","importassignment("+assignment.id+")")
+            boundry.appendChild(start)
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+        }
+        function decompress(){
+            document.getElementsByClassName("playlist")[0].style.width="95%"
+            document.getElementsByClassName("display")[0].style.width="0%"
+        }
+        function compress(){
+            document.getElementsByClassName("playlist")[0].style.width="0%"
+            document.getElementsByClassName("display")[0].style.width="95%"
+        }
+        function showassignment(){
+            currentselection=document.getElementById("content").children
+            currentselection=currentselection[currentselection.length-2]
+            content=currentselection
+            addhead("/static/images/quiz.png","Module Test","head")
+            let assignment=material["assignment"]
+            displayinstructions(assignment,material["scores"].length);
+            compress()
+        }
+        function add(thumbnail,ltitle,classname,execution_function){
+            let boundry=document.createElement("div")
+            let thumb=document.createElement("img")
+            let title=document.createElement("p")
+            thumb.src=thumbnail
+            boundry.className=classname
+            boundry.setAttribute("onmouseover","changeselection(event.target)")
+            boundry.setAttribute("onclick",execution_function)
+            title.innerText=ltitle
+            boundry.appendChild(thumb)
+            boundry.appendChild(title)
+            document.getElementById("content").appendChild(boundry)
+        }
+        function leaderboard(){
+            currentselection=document.getElementById("content").children
+            currentselection=currentselection[currentselection.length-1]
+            content=currentselection
+            addhead("/static/images/quiz.png","Score Board","head")
+            let boundry=document.createElement("DIV");
+            let canvas=document.createElement("canvas");
+            boundry.className="scorechart"
+            canvas.id="myChart"
+            boundry.appendChild(canvas)
+            document.getElementsByClassName("display")[0].appendChild(boundry)
+            properties["data"]["datasets"][0]["data"]=[]
+            properties["data"]["labels"]=[]
+            for(let i=0;i<material["assignment"]["attempts allowed"];i++){
+                properties["data"]["labels"].push("Attempt "+(i+1))
+            }
+            for(let i=0;i<material["scores"].length;i++){
+                properties["data"]["datasets"][0]["data"].push(material["scores"][i]["score"])
+            }
+            var mychart=new Chart(document.getElementById('myChart'),properties)
+            compress()
+        }
+        function playlecture(index){
+            currentselection=document.getElementById("content").children[index]
+            content=document.getElementById("content").children[index]
+            addhead("https://img.icons8.com/ios/50/000000/circled-play--v1.png",material["lectures"][index].name,"head")
+            addvideo(material["lectures"][index].url,"present")
+            document.getElementById("content").children[index].className="topic selected"
+            compress()
+        }
+        function setcontent(material,attempt_allowed){
+            for(let i=0;i<material.length;i++){
+                add("https://img.icons8.com/ios/50/000000/circled-play--v1.png",material[i].name,"topic","playlecture("+document.getElementById("content").children.length+")")
+            }
+            if(attempt_allowed){
+                add("/static/images/quiz.png","Module Test","topic","showassignment()")
+            }else{
+                add("/static/images/lock.svg","Module Test","topic","return false")
+            }
+            add("/static/images/quiz.png","Score Board","topic","leaderboard()")
+<!--            playlecture(0)-->
+        }
+        function importassignment(aid){
+          let fdata=new FormData();
+          fdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+          fdata.append("aid",aid);
+          const xhttp = new XMLHttpRequest();
+          xhttp.onload =()=>{
+               if(xhttp.readyState==4 && xhttp.status==200){
+                let x=JSON.parse(xhttp.responseText)
+                document.getElementsByClassName("instructionpanel")[0].remove()
+                displayquestions(x["assignment"],x["assignment"])
+               }
+          }
+          xhttp.open("POST", "/getassignment", true);
+          xhttp.send(fdata);
+        }
+        function importcontent() {
+          const xhttp = new XMLHttpRequest();
+          xhttp.onload =()=>{
+               if(xhttp.readyState==4 && xhttp.status==200){
+                   material=JSON.parse(xhttp.responseText)
+                   setcontent(material["lectures"],material["assignment"]["attempts allowed"]>material["scores"].length)
+               }
+          }
+          xhttp.open("GET", "/getcontent?mid={{request.GET.mid}}", true);
+          xhttp.send();
+        }
+        function changeselection(element){
+            while(element.tagName!="DIV"){
+                element=element.parentElement;
+            }
+            currentselection.className="topic"
+            currentselection=element
+            currentselection.className="topic selected"
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+nav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 1px 6px 1px #b1b1b1;
+}
+.navigation{
+    display: flex;justify-content: space-between;align-items: center;padding: 5px;padding-left: 10px;padding-right: 10px;
+}
+.brand{
+    color: black;
+    font-size: 13px;
+    max-width: 90%;
+    display: flex;
+    align-content: center;
+}
+.navbutton{
+    width: 30px;
+}
+.navbutton div{
+    width:100%;
+    height: 2px;
+    background-color: black;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.sidenavouter{
+    background-color: #0000009e;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    z-index: 5;
+}
+.sidenav{
+    height: 100%;
+    background-color: #4240ad;
+    color: white;
+    overflow-x: hidden;
+    white-space: nowrap;
+    transition: 0.5s ease-in-out;
+}
+.sidenavheader{
+    padding: 30px 15px;
+}
+.sidenavheader p{font-size: 20px}
+.sidenavbody{
+    background-color: white;
+    height: 79.9%;
+    overflow-y: auto;
+}
+.sidenavbody ul{
+    padding: 0;
+    line-height: 35px;
+}
+.sidenavbody ul li {
+    border-bottom: 1px solid #d4d4d4;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.sidenavbody ul li a{
+    color: black;
+    text-decoration: none;
+}

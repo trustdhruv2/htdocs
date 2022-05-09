@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dcs</title>
+    <link rel="stylesheet" href="/static/navbar-mobile.css">
+    <link rel="stylesheet" href="/static/style-mobile.css">
+    <style>
+        .introbox{
+            background-color: black;color: white;align-items: center; padding: 5px 10px;
+        }
+        .introbox button{
+            background-color: white;
+            border: 0;
+            border-radius: 0.2em;
+            padding: 8px;
+            font-size: 15px;
+            width: 100%;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <nav>
+        <div>
+            <div class="navigation">
+                <div class="brand">
+                    <h1>Dark cyber securities</h1>
+                </div>
+                <div onclick="navcontroller(event)" class="navbutton">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div onclick="navcontroller(event)" style="width: 0%" class="sidenavouter">
+        <div style="width: 0%" class="sidenav">
+            <div class="sidenavheader">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 172 172" style=" fill:#4a90e2;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M86,6.90688c-43.65602,0 -79.12,35.46398 -79.12,79.12c0,41.63931 32.27171,75.80172 73.1336,78.87141c0.08056,0.00655 0.16115,0.01386 0.24187,0.02015c1.9,0.13691 3.80998,0.22844 5.74453,0.22844c1.93455,0 3.84453,-0.09153 5.74453,-0.22844c0.08072,-0.0063 0.16131,-0.01361 0.24187,-0.02015c40.86189,-3.06969 73.1336,-37.2321 73.1336,-78.87141c0,-43.65602 -35.46398,-79.12 -79.12,-79.12zM86,13.78688c39.93779,0 72.24,32.3022 72.24,72.24c0,19.71706 -7.89544,37.55193 -20.6736,50.57875c-5.46671,-3.98083 -12.22246,-6.35558 -18.275,-8.47906c-7.16896,-2.5112 -13.95113,-4.89168 -15.82937,-9.03c-0.29584,-3.53288 -0.2694,-6.29176 -0.24188,-9.46l0.00672,-1.34375c3.05472,-2.9068 6.89623,-9.04167 8.21031,-14.70735c2.2704,-1.21088 5.04643,-4.11354 5.87891,-11.06578c0.41624,-3.45032 -0.56572,-6.12245 -1.94172,-7.91469c1.8576,-6.3812 5.55361,-22.53555 -0.92047,-32.96219c-2.73824,-4.40664 -6.87027,-7.18686 -12.30203,-8.28422c-3.05128,-3.77712 -8.80925,-5.83859 -16.50797,-5.83859c-11.69944,0.21672 -20.27622,3.80018 -25.4775,10.64922c-6.13352,8.084 -7.29248,20.29804 -3.45344,36.32156c-1.42072,1.79224 -2.44546,4.50307 -2.02234,8.02219c0.83592,6.95224 3.60179,9.8549 5.87219,11.06578c1.31408,5.67256 5.15215,11.80726 8.21031,14.71406l0.00672,1.31015c0.02752,3.182 0.05396,5.94696 -0.24188,9.4936c-1.88512,4.14864 -8.69992,6.55503 -15.90328,9.09719c-6.0162,2.12442 -12.73196,4.50283 -18.18765,8.43203c-12.78804,-13.02829 -20.68703,-30.87322 -20.68703,-50.59891c0,-39.93779 32.30221,-72.24 72.24,-72.24z"></path></g></g></svg>
+                <p>Login or register</p>
+            </div>
+            <div class="sidenavbody">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/services">Services</a></li>
+                    <li><a href="/category">Start learning</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    {% if request.user.is_anonymous %}
+                        <li><a href="/login">Login</a></li>
+                        {% else %}
+                        <li><a href="/account">Account</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="introbox" >
+        <div style="margin: 10px 0px">
+            <img style="width: 100%" src="{{ product.thumbnail }}" alt="">
+        </div>
+        <div>
+            <h1 style="font-size: 25px;margin: 15px 0px">{{ product.name }}</h1>
+            <p style="margin: 15px 0px">{{ product.description }}</p>
+            <div style="display: flex;align-items: center;margin: 15px 0px;">
+                <div style="border-radius: 0.2em;width: 30px;text-align: center;background-color: green;color: white;padding: 5px">
+                    <p style="margin: 0;font-size: 15px;">&#9956;{{ product.rating }}</p>
+                </div>
+                {% for i,j in choose.items %}
+                    {% ifequal i product.level %}
+                        <small style="margin: 0px 20px;font-size: 15px">{{ j }}</small>
+                    {% endifequal %}
+                {% endfor %}
+            </div>
+        {% ifequal isenrolled False %}
+            <form method="post" action="/description?pid={{ request.GET.pid }}" style="margin: 15px 0px">
+                <input name="pid" type="hidden" value="{{ request.GET.pid }}">
+                {% csrf_token %}
+                <button type="submit">Get started</button>
+            </form>
+            {% else %}
+                <a href="/dashboard"><button >Go to training</button></a>
+        {% endifequal %}
+        </div>
+    </div>
+    <div style="padding: 10px 15px">
+        {% if skills %}
+        <div style="width: 100%">
+            <div style="overflow: auto;padding: 15px;border-radius: 0.2em;">
+                <h2 style="font-size: 20px;margin: 5px 0px">Skills you will gain</h2>
+                <div style="padding: 10px 0px;line-height: 30px;display: flex;flex-wrap: wrap;align-items: center">
+                    {% for i in skills %}
+                        <span style="background-color: #bdbdbd;margin: 10px 5px;padding: 1px 5px;border-radius: 0.7em;"><small>{{ i.name|title }}</small></span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+       <div style="border-radius: 0.3em;padding: 10px 15px">
+            <h2 style="font-size: 18px;margin: 0">This course includes</h2>
+           <ul style="line-height: 35px;list-style: none;padding: 0px;font-size: 15px">
+               <li style="display: flex;align-items: center"><img style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAFKElEQVRoge2ZS2hUVxjH/+fOQ42JNpP4SKIWjU4CQsHG2k1FopZaW6EipmJaKKWSigrdKa2FKZQuuismPrAUKgq+CtZWS9VE2kUXkrizRkmqRDNaNFMmj4kz997v38VMTBxn5j5mkizMf3XvnDnf/f3n+845c84FpjSlF1uqEEG2nqanKxBZRVH1BOtEUKuIChLFJAFikGRYyFsK6CCk7eb1edcQUjKpBl77vW+h4VG7QPUBySoSSAHj2Wum7gE8veZ9gseFvpauLWX3J9TAij8H5qiE/jWhPgLhHwW0DZ+6B0gmBPzBo/PL29srH4+7gbq26HahHAAReBbQFfxom6APSu3u3jb/5LgYqGunD9HoQYKfpAPkDT+mrxIcKR0K7+loWqkXzEDdL+EiFhedhfDt8YQfbVMX9Ri2hpsqY1ZsmiV8O30TCw+A3OidJj8vP33Dn7cBRKMHJxYeoBAk1vcPlXxnhZezhF69Gm2EyPFJgH/aJsJt4R2LTjk2sOpKf5mhzE4S5ZMFn2qLQLw14abMU2zWEjJgfOMYXgRi6BBDLxQ8SATAxFeOMvDK1b4FHlPrdrpIyZMY1gSIJybx12NCTZsBQssHfqRvQlPGsnBTdY+tDHhMtdvNCmvGh3Fg7cv4ccNifLvqJRTH+8FEPF94kPSbhnenvRIKUYOoRlc1L4Tfk0zq5mAAl7YswbpyE2ZsCBTTLXyyDfwQp+mxNLDijcjrBBe4HbBjVT7DhyNvLUbz6gBmJaKQVDYcwyevq8oe3qmzNEBR9W7hSaaHAwC8s7QUVxqW4c25Ag4PgabpFD7ZprjW2gC5Mq+pMovKi3w4unEJWtaUY7bRD0nEncGTgCgbGSCC+czzVno3WIrW7UFsqCBkeBAUsQWf+rjG0gCSOylX8Db4AQBzinz4flM1Dq+fi9nmAJBaN3LCJ8dNhaUBjm4DHcPbNTCiTTUBtDYGMYsxUCQ3fJKpJD2G93kD7uGzDWIrjfQjcsJnjJ+phAbz+W/jROc7I6g/1okoi0AoS3gSA+kxMmXgAYmAG3i7GXg0pGPvpbu40KND+UpApdmBBwQPLA1AeJtQy8cL/nxnBHtbexGR6VD+mVY1/8zzRfGWpQEqtEO42Sn8yPdy/er7Lt/FhR4D8BVDaZoj+NRn7dYGIG2k5gqektnB+VsR7GvtRURmAP4iO7NNxuebIm3psZ8bxDevz7tG4p4b+HT8R0M6Pj7XhaZL/+I/rQTw+lzDk+yJxYMdlgYQUkLICXebESBhJm2c/bsPq4914rdeAP6ZIFQ+8CDViUxHkRk3NEt/6lugRO8m4bcPTzA+jHXzFeIG8cdDE8o3HYQ2pp87eBBx02T18P6aXlsGAKD6zINDSvCpXfjkvUBMMxXZk9bPNTyEqjn2+bI9mTiz7omn0/iCxGPb8GSyTDRvQeFJ9HkSknVPnNXAjYaFEUDtsQ2fgsLzAPnAQ0R2DoRqsh765jzY6t42/6QSHJkseJItw/trz+RitDyZ+8dfsYvEuUmAvxDTw59Z8VkfLTYoU4+pRpIXJwxe+GtML2lAqN7I3wCAcFNlbM6Th+8BcngiyiZmhDcjZH0yDbh4wVF5tOd9AM0kygsM/0hEdlnVfLpsZWCswjsWnVJxrVaJHCQRL8QiJVTNnoRe6xQeyPMlX9mhe1Vekd0CNIKy0BE8eI+ijospLZlW2Akx8FQhamWBOyuhuBai6gjUUFiF1P6a5CCo7gt4G4J2U6QtFg92FOI165Sm9KLrf5b0O2bMNmIoAAAAAElFTkSuQmCC"/>{{ llist }} lectures</li>
+               <li style="display: flex;align-items: center"><img style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAADFElEQVR4nO3bv2sUaRzH8deKiYbIpVFBRey08I7zEBtBFEGjhU2wFCyFAz07j7vGq6KF+ANE/wYRQcRKCxULtVCwEoIWgj+4OxFzMXdRLlrMBMOandndmWeeidk3PGwyz3e/z/fzmd1nZ56ZYYHTCJh7Nw7hu4J5xnERNwpXVCErMYlPJbVJrAhR6OIOYgewKifmBaawPo0viwFswF9YgjU58a/wb1mD9+EP7e3Rzel7trUR22nblube3EbsJI6ntRfmdAdF1sWAmXYqT9yinP51OJKXpMYcxdqsgDwDfmgjps4swo95AVn0l1dLNDI1zOe9Wwqd/Aw2sx/vmraNpa+fCuRtxUzOMexq6hvC5W6SFjHgNv5u0fcMH5X0M5Tmepr+PY6bTf3Lu01cxIAsXuIAfsaygrkmcF5ycFM6oQyAS2mrNQt+EuwZELuA2PQMiF1AbHoGxC4gNnU3YAibMBhqgLoa0MDv+BOP8BoHYxQyovVqS9fH321wco7xPmBji/jlGXWOZA1U10/ANck5wGz6MFz2QHUyoCFZ+YW72OtrE5pPvwtTFwMaOIuH2JluuyvZ4/+k/7/ClaoLq2IOaODcrLzvfTEBtuI5tmTk6HoOyCO0Ac3iZ9oEdsyKW5KTZ15Ogg2cweE5+gZx3ZdPwlSoImIZMCM+65rDR19PgqUTw4B2xL+TTIAPQhdTtQGdiL9fRUFVGtCQXGesjXiqNWAUv2T0Vy6e6gw4gWMZ/VHEU40BtRVPeANG5YvfI5J4whowil8z+scl4u8FrCGXUAb8Jl/8sMjiCWdA1vF3bcQTxoB+fN+ir1biCWPARnOfvb3HPjUSTxgDfppj21vJTQ13AoxXiBCXx9/glmQ192H6+gT/BxirMCEMuJq2eUFd1gSj0TMgdgGx6RkQu4DY9AyIXUBsihwHbBfgWl2XDHX7xiIGdHVvbt1Y8F+BPAM+VFJFWP7L6swz4DGmy6ulcqYlGgpxSvkPQFXVLhQVT3JrynHlPggZuk1IluNzJ/lOHp1ditUdxMdiWvK8wrcwf/XoEZrPNTZeomMkVaIAAAAASUVORK5CYII="/> {{ assignment }} assignments</li>
+               <li style="display: flex;align-items: center"><img style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABpUlEQVRoge2YP04CQRxG3wCVCSSQYEflATyChkJbr2CBiXIAKaHTwlhZkXABz0CUytaWwj+JUEFCgMQCmR0LMTGEWZYdZIZkXjm789vvLZN8G8Dj8XhsIsIu7t19FgIhb4EjIL3G544FNBWq8naRaZsM0grMwj8DOZMHLGGQUMn9l/LOR9wBCd2F2Zv/z/AA2UDIG5MBWgF+js0mODbZHCawzjMfRsZkc5jAVuAFbOMFbJOyHQAgX3pUC5bHCprIoNJvFLVt7fIvkBZwIpKJp9xpq6C7yWWBX7LJlNK29TYIQEhbb4uAtq23RUCLdQElpdF+6wJyNDLab1dATpl0O0YjrBSZCgLkcMik2yH4mhjNWklACarv5+na3zVNi26MyEdoUXgXiCTganiIIOByeFgi4Hp4CBEQiprr4SFE4LWcrkacMV5TllgYF5mC5jqCxMW8iWVQAQbmUeJhLNBvFNtyKvaBe8DswyYGof9O2yBfal2Cuppf79UPF2a1/jU6T69+cA2iEvV+5wRgNQknBSC6hLMCsPpxcpbds4eoperxeDwb5htK7XUxP7UCGQAAAABJRU5ErkJggg=="/>Live chat support</li>
+               <li style="display: flex;align-items: center"><img style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAACrklEQVR4nO3bO2hUQRjF8Z9PUHyLBoxio50IGhANWlloZxAECwmItYWFgg9E0MZGfGDQVixEbKwshCipxCYoYqWpDIqNFqJCDLG4C4Y1JDPrzI6b3D9c2E2G8509u/e7M3N3qampqZnDzIsYewSXsSiTl1SM4QIepRYexESHHIOhL2p+RAALI8aWJthrTACzkjqA0gZKUwdQ2kBp6gBKGyhNHUBpA6WpAyhtoDRzPoDUC5xbGE2s2Uw3TmauMSVDZl6G9rTBR0+Aj6FQsfoUSKw3iPHEms0sSCmWOoAVifWyM+dPgTqA0gZKk7oHHMKbxJrNbMPjVGKpAxjFSGLNZlanFEsdwC6JDU7B1pRiqQMYSKyXnTnfBOsAShsoTR1AaQOlqQNoU51vuIsH8i+Xo8h5z38cz7ESZ/Cs8fdhHFBNmHZkrJ+ckC2xycfhAM3rkZqhx3+xJfZs5iFeZKwfRI4AJlS7wz8Dxr7EkwweshB6CtyP1F2E94HaHXEKxC6Hx/Ahg48gcgRwHJsixu9HbwYfQeQIYCPWRozfo+BX8HIEMI63EeOHM3gIJkcAC3BJ2A2MZTiVwUMWYidCX9A/jd5N/IjUTH4ViCE2gAm88uduUR92Nh5vwdfEL7qlAHI3n+2qS9wPrFf1hxFsxuLMtYNoR/dd3jio+kLSXd1/JXcAJ7Ab6/Ba9SnYgo+qT8bZzPWT0koPWDqN3sEW9DpiKtxRtCuAdbiG0/6zn9zE9IBfLdbYq9oK624878PRFrVCCfYaE8AANpj5HVyDVY3HZ3C+qU6vavo7edn8Cd8jvEzHGG4n0mqJK/5uSr9wEQ+n+N+EqiEWoR3zgM84hqeN5/24gyVtqF2Ec/68s0/RNcWYHrybNG5f29y1gS7cU63yprvKrMQNXNVZP8mbXfwGOmI5GHqahcYAAAAASUVORK5CYII="/>Certificate on completion</li>
+           </ul>
+        </div>
+        </div>
+    </div>
+    <div style="margin: 5px 15px;padding: 5px 15px;box-sizing: content-box">
+        <h2>Course Contents</h2>
+        <div style="border:1px solid #a7a7a7;border-radius: 0.2em;width: 100%">
+            {% for i,j in content.items %}
+                <div>
+                    <div style="background-color: #cacaca;overflow: auto;display: flex;justify-content: space-between;align-items: center;padding: 0px 10px">
+                        <h3 style="margin: 10px 0px;font-size: 18px">{{ i|title }}</h3>
+                        <img onclick="collapse(event)" style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA30lEQVRoge3XwQrCMBCE4XlC40HxoM+uUKUv0YIe2rnUJNU2ySYwHwildmF/cgogIiIiImLsCOAFoJufm3QGMAB4z78RwM10ow2WEU3GhCKairngO2IIvLsY7bjKdxIjgCuAU+C/6k4mFkHVx/wSQdXG/BNB1cVsiaBqYvZEkHlMiggyi0kZQcVjckRQsZicEZQ9pkQEZYspGUHJYywiKFmMZQTtjqkhgjbHOM+g9d0hdMdxsaGnZ6CGC5AvposN9KgvgpYxfexjh6n0jpWjM+IAPDDteDDeRURERERa8wGW8+zcrvBVQQAAAABJRU5ErkJggg=="/>
+                        <img onclick="openpanel(event)" style="width: 20px;display: none" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAA9ElEQVRIie3T20rDQBSF4e8JKkhpa7WeUBTFB/Mt9U4Qb7TaekJFxcNLxJuJDmHSkw2CZMG+yV5r/ROSoVatv1QDh2jOoasZuhrFxQJOkGGA7i8gbVyErjMsxsvjsMhnOCOsG7Jx11FsuCwsM9yiNwWkFzLFnv4kpkdsTgBZxV1JfqNoXimBPWFrBGQN94ncA9bLQh1cJUJv2Ev4t/Gc8N+Eg49UR/qbvWM/8u3gpQSyPA6Sq10C+8ABdvGa2F9PA8mV+lUzfIYpPp/1Sny/WT9ROldIrpafm14ZZBxsiKV5QWLYeQQZVAGJYadhWlVBav1zfQHKJIAi7N8iJQAAAABJRU5ErkJggg=="/>
+                    </div>
+                    <div style="overflow: hidden;">
+                        {% for k in j.0 %}
+                            <div style="overflow: auto;border-bottom: 1px solid #a7a7a7">
+                                <p style="margin: 15px;display: flex;align-items: center"><img style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAFKElEQVRoge2ZS2hUVxjH/+fOQ42JNpP4SKIWjU4CQsHG2k1FopZaW6EipmJaKKWSigrdKa2FKZQuuismPrAUKgq+CtZWS9VE2kUXkrizRkmqRDNaNFMmj4kz997v38VMTBxn5j5mkizMf3XvnDnf/f3n+845c84FpjSlF1uqEEG2nqanKxBZRVH1BOtEUKuIChLFJAFikGRYyFsK6CCk7eb1edcQUjKpBl77vW+h4VG7QPUBySoSSAHj2Wum7gE8veZ9gseFvpauLWX3J9TAij8H5qiE/jWhPgLhHwW0DZ+6B0gmBPzBo/PL29srH4+7gbq26HahHAAReBbQFfxom6APSu3u3jb/5LgYqGunD9HoQYKfpAPkDT+mrxIcKR0K7+loWqkXzEDdL+EiFhedhfDt8YQfbVMX9Ri2hpsqY1ZsmiV8O30TCw+A3OidJj8vP33Dn7cBRKMHJxYeoBAk1vcPlXxnhZezhF69Gm2EyPFJgH/aJsJt4R2LTjk2sOpKf5mhzE4S5ZMFn2qLQLw14abMU2zWEjJgfOMYXgRi6BBDLxQ8SATAxFeOMvDK1b4FHlPrdrpIyZMY1gSIJybx12NCTZsBQssHfqRvQlPGsnBTdY+tDHhMtdvNCmvGh3Fg7cv4ccNifLvqJRTH+8FEPF94kPSbhnenvRIKUYOoRlc1L4Tfk0zq5mAAl7YswbpyE2ZsCBTTLXyyDfwQp+mxNLDijcjrBBe4HbBjVT7DhyNvLUbz6gBmJaKQVDYcwyevq8oe3qmzNEBR9W7hSaaHAwC8s7QUVxqW4c25Ag4PgabpFD7ZprjW2gC5Mq+pMovKi3w4unEJWtaUY7bRD0nEncGTgCgbGSCC+czzVno3WIrW7UFsqCBkeBAUsQWf+rjG0gCSOylX8Db4AQBzinz4flM1Dq+fi9nmAJBaN3LCJ8dNhaUBjm4DHcPbNTCiTTUBtDYGMYsxUCQ3fJKpJD2G93kD7uGzDWIrjfQjcsJnjJ+phAbz+W/jROc7I6g/1okoi0AoS3gSA+kxMmXgAYmAG3i7GXg0pGPvpbu40KND+UpApdmBBwQPLA1AeJtQy8cL/nxnBHtbexGR6VD+mVY1/8zzRfGWpQEqtEO42Sn8yPdy/er7Lt/FhR4D8BVDaZoj+NRn7dYGIG2k5gqektnB+VsR7GvtRURmAP4iO7NNxuebIm3psZ8bxDevz7tG4p4b+HT8R0M6Pj7XhaZL/+I/rQTw+lzDk+yJxYMdlgYQUkLICXebESBhJm2c/bsPq4914rdeAP6ZIFQ+8CDViUxHkRk3NEt/6lugRO8m4bcPTzA+jHXzFeIG8cdDE8o3HYQ2pp87eBBx02T18P6aXlsGAKD6zINDSvCpXfjkvUBMMxXZk9bPNTyEqjn2+bI9mTiz7omn0/iCxGPb8GSyTDRvQeFJ9HkSknVPnNXAjYaFEUDtsQ2fgsLzAPnAQ0R2DoRqsh765jzY6t42/6QSHJkseJItw/trz+RitDyZ+8dfsYvEuUmAvxDTw59Z8VkfLTYoU4+pRpIXJwxe+GtML2lAqN7I3wCAcFNlbM6Th+8BcngiyiZmhDcjZH0yDbh4wVF5tOd9AM0kygsM/0hEdlnVfLpsZWCswjsWnVJxrVaJHCQRL8QiJVTNnoRe6xQeyPMlX9mhe1Vekd0CNIKy0BE8eI+ijospLZlW2Akx8FQhamWBOyuhuBai6gjUUFiF1P6a5CCo7gt4G4J2U6QtFg92FOI165Sm9KLrf5b0O2bMNmIoAAAAAElFTkSuQmCC"/>{{ k.name }}</p>
+                            </div>
+                        {% endfor %}
+                        {% for k in j.1 %}
+                            <div style="overflow: auto;border-bottom: 1px solid #a7a7a7">
+                                <p style="display: flex;align-items: center;margin: 15px"><img style="width: 20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAADFElEQVR4nO3bv2sUaRzH8deKiYbIpVFBRey08I7zEBtBFEGjhU2wFCyFAz07j7vGq6KF+ANE/wYRQcRKCxULtVCwEoIWgj+4OxFzMXdRLlrMBMOandndmWeeidk3PGwyz3e/z/fzmd1nZ56ZYYHTCJh7Nw7hu4J5xnERNwpXVCErMYlPJbVJrAhR6OIOYgewKifmBaawPo0viwFswF9YgjU58a/wb1mD9+EP7e3Rzel7trUR22nblube3EbsJI6ntRfmdAdF1sWAmXYqT9yinP51OJKXpMYcxdqsgDwDfmgjps4swo95AVn0l1dLNDI1zOe9Wwqd/Aw2sx/vmraNpa+fCuRtxUzOMexq6hvC5W6SFjHgNv5u0fcMH5X0M5Tmepr+PY6bTf3Lu01cxIAsXuIAfsaygrkmcF5ycFM6oQyAS2mrNQt+EuwZELuA2PQMiF1AbHoGxC4gNnU3YAibMBhqgLoa0MDv+BOP8BoHYxQyovVqS9fH321wco7xPmBji/jlGXWOZA1U10/ANck5wGz6MFz2QHUyoCFZ+YW72OtrE5pPvwtTFwMaOIuH2JluuyvZ4/+k/7/ClaoLq2IOaODcrLzvfTEBtuI5tmTk6HoOyCO0Ac3iZ9oEdsyKW5KTZ15Ogg2cweE5+gZx3ZdPwlSoImIZMCM+65rDR19PgqUTw4B2xL+TTIAPQhdTtQGdiL9fRUFVGtCQXGesjXiqNWAUv2T0Vy6e6gw4gWMZ/VHEU40BtRVPeANG5YvfI5J4whowil8z+scl4u8FrCGXUAb8Jl/8sMjiCWdA1vF3bcQTxoB+fN+ir1biCWPARnOfvb3HPjUSTxgDfppj21vJTQ13AoxXiBCXx9/glmQ192H6+gT/BxirMCEMuJq2eUFd1gSj0TMgdgGx6RkQu4DY9AyIXUBsihwHbBfgWl2XDHX7xiIGdHVvbt1Y8F+BPAM+VFJFWP7L6swz4DGmy6ulcqYlGgpxSvkPQFXVLhQVT3JrynHlPggZuk1IluNzJ/lOHp1ditUdxMdiWvK8wrcwf/XoEZrPNTZeomMkVaIAAAAASUVORK5CYII="/>{{ k.name }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="/static/javascript/navbar.js"></script>
+    <script>
+        function collapse(value){
+            let element=value.target.parentElement.parentElement.children[1]
+            element.style.height=element.children[0].clientHeight="0px"
+            value.target.style.display="none"
+            value.target.parentElement.children[2].style.display="block"
+        }
+        function openpanel(value){
+            let element=value.target.parentElement.parentElement.children[1]
+            element.style.height=element.children.length*element.children[0].clientHeight+"px"
+            value.target.style.display="none"
+            value.target.parentElement.children[1].style.display="block"
+        }
+    </script>
+</body>
+</html>

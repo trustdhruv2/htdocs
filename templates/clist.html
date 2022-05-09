@@ -1,0 +1,115 @@
+    {% extends 'base.html' %}
+    {% block styles %}
+    {{block.super}}
+    <style>
+        html,body{
+            height: 100%;
+            box-sizing: border-box;
+        }
+        select{
+            width: 100%;
+            box-sizing: border-box;
+            border: 0;
+            border-bottom: 1px solid;
+            outline: none;
+            font-size: 14px;
+        }
+        form div{
+            margin-top: 20px;
+            margin-bottom: 20px;
+            overflow: auto;
+            font-size: 15px;
+        }
+        form button{
+            border: 0;
+            cursor: pointer;
+            color: white;
+            background-color: blue;
+            padding: 10px;
+            background-color: blue;
+            border-radius: 0.5em;
+            width: 100%;
+            font-size: 15px;
+        }
+    </style>
+    {% endblock %}
+    {% block content %}
+    <div style="height: 100%;box-sizing: border-box;padding: 20px;display: flex">
+    <section style="width: 300px;margin-left: 0.5%;margin-right: 0.5%;padding: 10px 15px;border: 1px solid #dfdfdf;border-radius: 1em;">
+        <div style="display: flex;justify-content: space-between;align-items: center;margin-top: 10px;margin-bottom: 10px">
+            <p style="margin:0;font-size: 20px;font-weight: 600;">Filter By</p>
+            <a href="/courses?cid={{ request.GET.cid }}" style="margin:0;font-size: 15px;text-decoration: none;color: blue">Clear All</a>
+        </div>
+        <form method="GET" action="/courses">
+            <div>
+                <input type="hidden" name="cid" value="{{ request.GET.cid }}">
+            </div>
+            <div>
+                <p>Name</p>
+                <select name="name" >
+                    {% for i in name %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <p>Difficulty level</p>
+                <select name="level" >
+                    {% for i in levels %}
+                        {% for j,k in choose.items %}
+                            {% ifequal j i %}
+                                <option value="{{ j }}">{{ k|title }}</option>
+                            {% endifequal %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <p>Rating</p>
+                {% for i in rating %}
+                    <div style="margin-top: 5px;margin-bottom: 7px;">
+                        <input type="radio" name="rating" value="{{ i }}" checked >
+                        <small style="font-size: 18px">{{ i }}</small>
+                        <small style="font-size: 20px"> &#9956;</small>
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                <button type="submit">Filter</button>
+            </div>
+        </form>
+    </section>
+    <div style="width: 73%;margin-left: 0.5%;margin-right: 0.5%;background-color: white;padding:15px;box-sizing: border-box;">
+        <div>
+            <h1 style="font-size: 25px">{{ clist.0.course.name|title }}</h1>
+            {% for i in clist %}
+            <div style="padding-top: 15px;padding-bottom: 15px;margin-top: 15px;margin-bottom: 15px;border-bottom: 1px solid #cacaca;display: flex">
+                <div style="width: 25%">
+                    <img style="width: 100%;height: 100%" src="{{i.thumbnail}}" />
+                </div>
+                <div style="width: 75%;padding-left: 10px;padding-right: 10px;display: flex;justify-content: space-between">
+                    <div style="line-height: 30px;max-width: 40%">
+                        <p style="margin: 0;font-size: 23px">{{ i.name | title }}</p>
+                        <p style="margin-top: 5px;margin-bottom: 5px;font-size: 17px;line-height: 23px">{{ i.description }}</p>
+                        <div style="border-radius: 0.2em;width: 35px;text-align: center;background-color: green;color: white">
+                            <p style="margin: 0;font-size: 15px;">&#9956;{{ i.rating }}</p>
+                        </div>
+                        <div>
+                        {% for j,k in choose.items %}
+                            {% ifequal j i.level %}
+                                <small style="color: crimson">{{ k|title }}</small>
+                            {% endifequal %}
+                        {% endfor %}
+                        </div>
+                        <div>
+                            <button style="outline: none;color: white;border: 0;background-color: blue;padding: 5px;padding-left: 15px;padding-right: 15px;border-radius: 0.2em;"><a style="color: white;text-decoration: none" href="/description?pid={{ i.id }}">Join us</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dcs</title>
+    <link rel="stylesheet" href="/static/spinner.css">
+    <style>
+        *{
+            font-family: sans-serif;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        .popup{
+            background-color: white;text-align: center;padding: 10px;max-width: 400px;font-size: 24px;border-radius: 0.2em;margin: 15px;
+        }
+        .popupback{
+            background-color: #000000b8;
+            position: fixed;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+        form{
+            margin: 10px 0px;
+        }
+        form div{
+            box-sizing: border-box;
+        }
+        .error{
+            display: none;
+            float: right;
+            color: red;
+        }
+        .popup img{
+            width: 60px;
+        }
+        .popup h1{
+            font-size: 23px;
+        }
+        .popup p{
+            font-size: 17px;
+            line-height: 30px;
+        }
+
+        body{
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        form .element{
+            margin: 30px 0px;
+        }
+        form h2{
+            font-size: 30px;
+        }
+        form input{
+            width: 100%;
+            box-sizing: border-box;
+            border: 0;
+            border-bottom: 1px solid;
+            outline: none;
+            font-size: 16px;
+            padding: 5px;
+        }
+        form div .active{
+            display: block;
+        }
+        input[type="submit"]{
+            border: 0;
+            cursor: pointer;
+            color: white;
+            background-color: blue;
+            padding: 10px;
+            background-color: blue;
+            border-radius: 0.5em;
+            width: 100%;
+            font-size: 15px;
+            outline: none;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body onload="initverify()">
+    <div style="background: url('/static/images/login.jpg');width: 40%;height: 100%;position: fixed;right: 0;"></div>
+    <div style="display: flex;align-items: center;width: 60%;height: 100%;box-sizing: border-box;">
+        <div style="width: 70%;margin:auto;text-align: center;padding: 15px;box-sizing: border-box;">
+            <div>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADmElEQVRoge3ZS2tdVRTA8V8eNU20oglYrNZaawVfFawd+ApIZ+oHcOA3cOzMbyDUb+BAcKyoIwcFRUFRByoqJq021Qa1NqWtSUiT9jpYJ5Dk7nPu3ufeZNL84ZJL9t7rrHXP2uuxN7vscmszNEA5U9iPu3EnxjFaja9hGVdxGX/jEjqDeHA/TOAoDguFS1jCOcxW31vR1oAxHMNDGG778Iqb+A0/YKV0cRsDDuEZ3NZibRMr+A5zJYtGCuYO4wSeKlyXyygOClf8S+b+yFVkBNN4oJVqZUxWnz9lGJFjwLBQ/t7+9Cpin4hq5/UwIseAE3bml9/KHdiL+aZJo02DeBBHCh+8ByfxnPBp+ANf4jRWC2Q9LHLG+boJTVFoDK9Uf3OZxJsiUqWYw9tYKJB5HZ+oCbFNLvQ07il40B68pV55uAuP43MR/3MYEZ6SdKW6JDQhklQJJzUrv84hvFQo+0ilUxd1BhxtGKvj+YK5LxTKHhY6JQe2MiQ2byn3Fcy9v4X8wxJ7NmXAlJrXNUDaVKHjIkhsImXA/hbC4cI2zd1Il24pA7qszOSLbZq7kaw3sK+l8NPyKsm5am4bunRLGVDamKyzKpJUkxHriWyt5TO6dEslsmPaNzrL+AxXRC0zIZT9HR/jXSy2lE384D9t/EevWqgNa/i0+mw7KRdq+3p3gq5CMGXA8g4o0pYu3VIGXNsBRdrSpVtqDyzIS/VP4FWR4tuG3mtig3+EnzPmd5XhqSjU0buJeRlviMxY0i9sZaySMS38+9ce87+3xY1SLnRJ80HTY3g9X8dsXsOjDeNL4lRvEykDOuLErI4Xy/QqYrph7JxEEVhX88+q75g+tD2Ragkf1IzdxExqoK6lXBVZNFXYLeIsnm1YX8oa3hFHjClm1TT2TQr8KzZzKlJdFEYcF71wPyziFH6sGV8RJxo3UoNNBtwQr/Vgzfg/+Eb0zlM5miaYEcVd3S8PX2s4xejlAlfUdEIV/4ni7aJoKXPzwTzex3uVjDpm8UuToJyqc0g04b2S25BovI8L1zuA26uxRaH0WXyLM3q3lfPi+KVxXm7ZPCKMOJA5v18uaPD7jeRGkY44HtyrfcuZyyy+knnwVRIGO+K1XhXpf9C9xIrYsI0+v5V+rpieFL4+iCumMyKMXi9d3O8l3zgeEQdhpWdJ65d8M/rI7IO8Zp0UrjUpwumEzdesS6J8XhBXSJcN4Jp1l11udf4HAterjhJKo6QAAAAASUVORK5CYII="/>
+                <h2 style="font-size: 30px">Contact verification</h2>
+            </div>
+            <form method="POST" onsubmit="return postform()" >
+                <div class="element">
+                    <input value="+91 {{ request.session.rdata.contact }}" disabled />
+                </div>
+                <div id="recap" ></div>
+                <div class="element">
+                    <input type="submit" value="Send OTP">
+                </div>
+            </form>
+            <form style="display: none"  onsubmit="return postform2()" method="POST" >
+                <div class="element">
+                    <input type="text" placeholder="Enter your otp" />
+                    <small class="error">Invalid OTP</small>
+                </div>
+                <div class="element">
+                    <input type="submit" value="Validate">
+                    <a onclick="location.reload()" style="float: right;color: blue;text-decoration: none;font-size: 14px;cursor: pointer;">Resend</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/static/javascript/popuphandler.js" ></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+    <script >
+        var valid=false
+        var firebaseConfig = {
+            apiKey: "AIzaSyBGFaAmVDuy5QXbtR-0jvoaFp1cUqrwvPM",
+            authDomain: "cyber-91401.firebaseapp.com",
+            projectId: "cyber-91401",
+            storageBucket: "cyber-91401.appspot.com",
+            messagingSenderId: "568795343748",
+            appId: "1:568795343748:web:efeb11ba06d54b80c30bd1",
+            measurementId: "G-SCNFJ0NZHY"
+        };
+        function initverify(){
+        firebase.initializeApp(firebaseConfig);
+        const auth=firebase.auth()
+        if(firebase.auth().isSignInWithEmailLink(location.href)){
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recap');
+            recaptchaVerifier.render();
+        }else{
+            generatepopup("Your verification link is expired or incorrect")
+        }
+        }
+        function postform(){
+            document.getElementsByTagName("form")[0].style.display="none"
+            document.getElementsByTagName("form")[1].style.display="block"
+            firebase.auth().signInWithPhoneNumber("+91{{ request.session.rdata.contact }}",window.recaptchaVerifier).then((res)=>{
+                window.confirmres=res;
+            },(err)=>{
+                console.log(err)
+            })
+            return false;
+        }
+        function postform2(){
+            window.confirmres.confirm(document.getElementsByTagName("form")[1][0].value).then((res)=>{
+                console.log(res)
+                let fdata=new FormData()
+                fdata.append("csrfmiddlewaretoken","{{ csrf_token }}")
+                let xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/registeruser", true);
+                xhttp.send(fdata);
+                location.href="/login"
+            }).catch((err)=>{
+                document.getElementsByTagName("form")[1][2].parentElement.children[2].className="error active"
+                console.log(err)
+            })
+            return false;
+        }
+    </script>
+</body>
+</html>

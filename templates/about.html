@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+  <section id="about" class="about">
+    <div class="container">
+      <div class="row gx-0">
+        <div class="col-lg-6 d-flex flex-column justify-content-center" >
+          <div class="content">
+            <h3>Who We Are</h3>
+            <h2>
+                Dark Cyber Securities was started by hackers and security leaders who are driven by a passion to make the internet safer.
+            </h2>
+            <p>
+                Our platform is the industry standard for hacker-powered security. We partner with the global hacker community to surface the most relevant security issues of our customers before they can be exploited by criminals. 
+                Dark Cyber Securities is headquartered in Karnal with offices in Delhi,Lucknow and the Banglore.
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-6 d-flex align-items-center">
+          <img src="/static/assets/img/about.jpg" class="img-fluid" alt="">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="container" data-aos="fade-up">
+      <header class="section-header">
+        <p>Contact Us</p>
+      </header>
+      <div class="row gy-4">
+        <div class="col-lg-6">
+          <div class="row gy-4">
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-geo-alt"></i>
+                <h3>Address</h3>
+                <p>
+                    #1636/16,First Floor <br>
+                    Sham Nagar,Sector-16<br>
+                    Karnal,132001 HR <br><br></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-telephone"></i>
+                <h3>Call Us</h3>
+                <p>+91 85580 28559<br>+91 70093 94709</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-envelope"></i>
+                <h3>Email Us</h3>
+                <p>info@darkcybersecurities.com<br>dhruv@darkcybersecurities.com</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-box">
+                <i class="bi bi-clock"></i>
+                <h3>Open Hours</h3>
+                <p>Monday - Saturday<br>9:00AM - 09:00PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <form action="/addquery" method="post" class="php-email-form">
+            <div class="row gy-4">
+              {% csrf_token %}
+              <div class="col-md-6">
+                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+              </div>
+              <div class="col-md-6 ">
+                <input type="text" class="form-control" name="company" placeholder="Organization">
+              </div>
+              <div class="col-md-6">
+                <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+              </div>
+              <div class="col-md-6 ">
+                <input type="tel" maxlength="10" class="form-control" name="phone" placeholder="Phone Number" required>
+              </div>
+              <div class="col-md-12">
+                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+              </div>  
+              <div class="col-md-12">
+                <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+              </div>
+
+              <div class="col-md-12 text-center">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your request has been submitted.Thank you!</div>
+
+                <button type="submit">Send Message</button>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>  
+
+
+{% endblock content %}
